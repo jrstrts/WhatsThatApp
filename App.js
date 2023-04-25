@@ -2,15 +2,12 @@
 import {StatusBar} from 'expo-status-bar';
 import {StyleSheet, View, ScrollView} from 'react-native';
 import React from 'react';
-import Message from './components/elements/message.js';
-import User from './components/elements/user.js';
+import MessageThread from './components/fragments/message-thread';
 
 export default function App() {
   return (
     <View style={styles.container} >
-      <ScrollView>
-        <User contactName='Contact 1' msgText='aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaadssssssssdfffff' />
-      </ScrollView>
+      <MessageThread />
     </View>
   );
 }
