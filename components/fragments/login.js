@@ -8,12 +8,16 @@ import {
   StatusBar,
   Pressable,
 } from 'react-native';
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 
 // const passwordValidator = require('password-validator');
 const validator = require('email-validator');
 
 class Login extends Component {
+  static propTypes = {
+    navigation: PropTypes.any,
+  };
+
   constructor(props) {
     super(props);
 
@@ -70,6 +74,8 @@ class Login extends Component {
   };
 
   render() {
+    const navigation = this.props.navigation;
+
     return (
       <View>
         <View style={loginStyles.txtContainer}>
@@ -102,16 +108,23 @@ class Login extends Component {
             style={[loginStyles.button]}
             onPress={() => {
               if (this.login()) {
-                console.log('go to main screen');
+                navigation.navigate('MainAppNav', {screen: 'Chat'});
               };
             }}>
             <Text style={loginStyles.buttonText}>Log in</Text>
           </Pressable>
           <Pressable
-            onPress={() => console.log('go to sign up')}
+            onPress={() => navigation.navigate('Signup')}
           >
             <Text style={[loginStyles.elements, loginStyles.linkText]}>
               Need an account?
+            </Text>
+          </Pressable>
+          <Pressable
+            onPress={() => navigation.navigate('MainAppNav', {screen: 'Chat'})}
+          >
+            <Text style={[loginStyles.elements, loginStyles.linkText]}>
+              Go straight to Chats
             </Text>
           </Pressable>
         </View>

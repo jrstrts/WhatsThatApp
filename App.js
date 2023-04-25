@@ -1,24 +1,29 @@
-/* eslint-disable max-len */
-import {StatusBar} from 'expo-status-bar';
-import {StyleSheet, View, ScrollView} from 'react-native';
 import React from 'react';
-import MessageThread from './components/fragments/message-thread';
-import Chats from './components/fragments/chat';
-import Login from './components/fragments/login';
+import {NavigationContainer} from '@react-navigation/native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+// import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import LoginNav from './components/navigators/loginNav';
+import MainAppNav from './components/navigators/mainAppNav';
+
+const Stack = createNativeStackNavigator();
 
 export default function App() {
   return (
-    <View style={styles.container} >
-      <Login />
-    </View>
+    <NavigationContainer>
+      <Stack.Navigator
+        headerBackVisible= 'false'
+      >
+        <Stack.Screen
+          name='LoginNav'
+          component={LoginNav}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name='MainAppNav'
+          component={MainAppNav}
+          options={{headerShown: false}}
+        />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: 'white',
-    justifyContent: 'center',
-    paddingTop: 45,
-  },
-});

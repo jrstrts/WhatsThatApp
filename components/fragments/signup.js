@@ -56,7 +56,7 @@ class Signup extends Component {
         statusText: 'Success!',
         statusColor: 'green',
       });
-      console.log('go to login screen');
+      navigation.navigate('Login');
     } else {
       console.log('Email OR password is not valid');
       this.setState({

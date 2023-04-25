@@ -30,7 +30,7 @@ class User extends Component {
     return (
       <Pressable
         style={messageStyles.userContainer}
-        onPress={() => console.log('go to chat screen')}>
+        onPress={() => navigation.navigate('ChatScreen')}>
         <View style={messageStyles.pictureBackground} />
         <View style={messageStyles.textBackground}>
           <Text style={messageStyles.usernameText}>
