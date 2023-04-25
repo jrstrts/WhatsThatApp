@@ -3,11 +3,12 @@ import {StatusBar} from 'expo-status-bar';
 import {StyleSheet, View, ScrollView} from 'react-native';
 import React from 'react';
 import MessageThread from './components/fragments/message-thread';
+import Chats from './components/fragments/chat';
 
 export default function App() {
   return (
     <View style={styles.container} >
-      <MessageThread />
+      <Chats />
     </View>
   );
 }
