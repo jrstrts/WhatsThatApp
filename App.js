@@ -2,31 +2,14 @@
 import {StatusBar} from 'expo-status-bar';
 import {StyleSheet, View, ScrollView} from 'react-native';
 import React from 'react';
-import Message from './components/message.js';
+import Message from './components/elements/message.js';
+import User from './components/elements/user.js';
 
 export default function App() {
   return (
     <View style={styles.container} >
       <ScrollView>
-        <Message type='outgoing' text='Something else completely entriely which is far too long for one line'/>
-        <Message type='incoming' text='Lorem ipsum dolor sit amet' />
-        <Message type='outgoing' text='Something else completely entriely which is far too long for one line'/>
-        <Message type='incoming' text='Lorem ipsum dolor sit amet' />
-        <Message type='outgoing' text='Something else completely entriely which is far too long for one line'/>
-        <Message type='incoming' text='Lorem ipsum dolor sit amet' />
-        <Message type='outgoing' text='Something else completely entriely which is far too long for one line'/>
-        <Message type='incoming' text='Lorem ipsum dolor sit amet' />
-        <Message type='outgoing' text='Something else completely entriely which is far too long for one line'/>
-        <Message type='incoming' text='Lorem ipsum dolor sit amet' />
-        <Message type='outgoing' text='Something else completely entriely which is far too long for one line'/>
-        <Message type='incoming' text='Lorem ipsum dolor sit amet' />
-        <Message type='outgoing' text='Something else completely entriely which is far too long for one line'/>
-        <Message type='incoming' text='Lorem ipsum dolor sit amet' />
-        <Message type='outgoing' text='Something else completely entriely which is far too long for one line'/>
-        <Message type='incoming' text='Lorem ipsum dolor sit amet' />
-        <Message type='incoming' text='Something else completely entriely which is far too long for one line'/>
-        <Message type='incoming' text='Lorem ipsum dolor sit amet' />
-        <StatusBar style='auto' />
+        <User contactName='Contact 1' msgText='aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaadssssssssdfffff' />
       </ScrollView>
     </View>
   );
