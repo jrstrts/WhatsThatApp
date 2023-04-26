@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {StyleSheet, Text, View, Pressable} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
 import PropTypes from 'prop-types';
 
 class User extends Component {
@@ -28,9 +28,8 @@ class User extends Component {
 
   render() {
     return (
-      <Pressable
-        style={messageStyles.userContainer}
-        onPress={() => navigation.navigate('ChatScreen')}>
+      <View
+        style={messageStyles.userContainer}>
         <View style={messageStyles.pictureBackground} />
         <View style={messageStyles.textBackground}>
           <Text style={messageStyles.usernameText}>
@@ -38,7 +37,7 @@ class User extends Component {
           </Text>
           <Text style={messageStyles.messageText}>{this.state.msgText}</Text>
         </View>
-      </Pressable>
+      </View>
     );
   }
 }
