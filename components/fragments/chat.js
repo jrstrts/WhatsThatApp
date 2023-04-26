@@ -1,6 +1,7 @@
 /* eslint-disable max-len */
 
 import {ScrollView, Pressable} from 'react-native';
+import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 import User from '../elements/user';
 
