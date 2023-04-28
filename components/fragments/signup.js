@@ -16,6 +16,7 @@ class Signup extends Component {
     super(props);
 
     this.state = {
+      isLoading: false,
       firstName: '',
       lastName: '',
       email: '',
@@ -64,15 +65,41 @@ class Signup extends Component {
 
     if (validator.validate(this.state.email) &&
     pwSchema.validate(this.state.password)) {
-      console.log('Email: ' + this.state.email);
-      console.log('Password: ' + this.state.password);
-      this.setState({
-        email: '',
-        password: '',
-        statusText: 'Success!',
-        statusColor: 'green',
-      });
-      navigation.navigate('Login');
+      const sendData = {
+        first_name: this.state.firstName,
+        last_name: this.state.lastName,
+        email: this.state.email,
+        password: this.state.password,
+      };
+
+      return fetch('http://localhost:3333/api/1.0.0/user', {
+        method: 'post',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(sendData),
+      })
+          .then((response) => {
+            if (response.status === 201) {
+              console.log('Email: ' + this.state.email);
+              console.log('Password: ' + this.state.password);
+              this.setState({
+                firstName: '',
+                lastName: '',
+                email: '',
+                password: '',
+                statusText: 'Success!',
+                statusColor: 'green',
+              });
+              navigation.navigate('Login');
+            } else if (response.status === 400 || response.status === 500) {
+              console.log('Something has gone wrong!');
+              this.setState({
+                statusText: 'There was a problem dealing with your request.',
+                statusColor: 'red',
+              });
+            }
+          });
     } else {
       console.log('Email OR password is not valid');
       this.setState({
@@ -129,7 +156,7 @@ class Signup extends Component {
         <View style={signupStyles.buttonContainer}>
           <Pressable
             style={[signupStyles.button]}
-            onPress={this.login} >
+            onPress={() => this.login()} >
             <Text style={signupStyles.buttonText}>Sign up</Text>
           </Pressable>
           <Text
