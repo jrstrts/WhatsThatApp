@@ -93,6 +93,7 @@ class Signup extends Component {
               });
               navigation.navigate('Login');
             } else if (response.status === 400 || response.status === 500) {
+              // TODO: better error messages with toasts
               console.log('Something has gone wrong!');
               this.setState({
                 statusText: 'There was a problem dealing with your request.',

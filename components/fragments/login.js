@@ -9,6 +9,7 @@ import {
   Pressable,
 } from 'react-native';
 import PropTypes from 'prop-types';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // const passwordValidator = require('password-validator');
 const validator = require('email-validator');
@@ -43,7 +44,7 @@ class Login extends Component {
     this.setState({password: password});
   };
 
-  login = () => {
+  login = async () => {
     const pwSchema = new PasswordValidator();
     pwSchema
         .is().min(8)
@@ -54,15 +55,48 @@ class Login extends Component {
 
     if (validator.validate(this.state.email) &&
     pwSchema.validate(this.state.password)) {
-      console.log('Email: ' + this.state.email);
-      console.log('Password: ' + this.state.password);
-      this.setState({
-        email: '',
-        password: '',
-        statusText: 'Success!',
-        statusColor: 'green',
-      });
-      return true;
+      const sendData = {
+        email: this.state.email,
+        password: this.state.password,
+      };
+
+      return fetch('http://localhost:3333/api/1.0.0/login', {
+        method: 'post',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(sendData),
+      })
+          .then((response) => {
+            if (response.status === 200) {
+              console.log('Email: ' + this.state.email);
+              console.log('Password: ' + this.state.password);
+              this.setState({
+                email: '',
+                password: '',
+                statusText: 'Success!',
+                statusColor: 'green',
+              });
+              return response.json();
+
+            // TODO: better error messages with toasts
+            } else if (response.status === 400) {
+              console.log('Bad email/password');
+            } else {
+              console.log('Something went wrong!');
+            }
+          })
+          .then(async (rJson) => {
+            try {
+              console.log(rJson);
+              await AsyncStorage.setItem('user_id', rJson.id);
+              await AsyncStorage.setItem('session_token', rJson.token);
+              this.props.navigation.navigate('MainAppNav', {screen: 'Chat'});
+            } catch (error) {
+              console.log(error);
+              throw 'Something went terribly wrong!';
+            }
+          });
     } else {
       console.log('Email OR password is not valid');
       this.setState({
@@ -107,9 +141,7 @@ class Login extends Component {
           <Pressable
             style={[loginStyles.button]}
             onPress={() => {
-              if (this.login()) {
-                navigation.navigate('MainAppNav', {screen: 'Chat'});
-              };
+              this.login();
             }}>
             <Text style={loginStyles.buttonText}>Log in</Text>
           </Pressable>
