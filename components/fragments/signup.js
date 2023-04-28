@@ -16,12 +16,28 @@ class Signup extends Component {
     super(props);
 
     this.state = {
+      firstName: '',
+      lastName: '',
       email: '',
       password: '',
       statusText: '',
       statusColor: 'black',
     };
   }
+
+  handleFirstNameInput = (firstName) => {
+    if (this.state.statusText != '') {
+      this.setState({statusText: ''});
+    }
+    this.setState({firstName: firstName});
+  };
+
+  handleLastNamelInput = (lastName) => {
+    if (this.state.statusText != '') {
+      this.setState({statusText: ''});
+    }
+    this.setState({lastName: lastName});
+  };
 
   handleEmailInput = (email) => {
     if (this.state.statusText != '') {
@@ -75,6 +91,22 @@ class Signup extends Component {
         </View>
 
         <View style={signupStyles.inputContainer}>
+          <TextInput
+            style={[signupStyles.inputs, signupStyles.elements]}
+            placeholderTextColor={'grey'}
+            inputMode='text'
+            placeholder='First Name'
+            onChangeText={this.handleFirstNameInput}
+            value={this.state.firstName}
+          />
+          <TextInput
+            style={[signupStyles.inputs, signupStyles.elements]}
+            placeholderTextColor={'grey'}
+            inputMode='text'
+            placeholder='Last Name'
+            onChangeText={this.handleLastNamelInput}
+            value={this.state.lastName}
+          />
           <TextInput
             style={[signupStyles.inputs, signupStyles.elements]}
             placeholderTextColor={'grey'}
