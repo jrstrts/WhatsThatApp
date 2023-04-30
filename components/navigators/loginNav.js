@@ -3,10 +3,33 @@ import React, {Component} from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import Login from '../fragments/login';
 import Signup from '../fragments/signup';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import PropTypes from 'prop-types';
 
 const Stack = createNativeStackNavigator();
 
 class LoginNav extends Component {
+  static propTypes = {
+    navigation: PropTypes.any,
+  };
+
+  componentDidMount() {
+    this.unsubscribe = this.props.navigation.addListener('focus', () => {
+      this.checkLoggedIn();
+    });
+  }
+
+  componentWillUnmount() {
+    this.unsubscribe();
+  }
+
+  checkLoggedIn = async () => {
+    const value = await AsyncStorage.getItem('session_token');
+    if (value !== null) {
+      this.props.navigation.navigate('MainAppNav');
+    }
+  };
+
   render() {
     return (
       <Stack.Navigator>
