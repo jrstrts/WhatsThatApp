@@ -74,8 +74,8 @@ class Login extends Component {
               this.setState({
                 email: '',
                 password: '',
-                statusText: 'Success!',
-                statusColor: 'green',
+                statusText: '',
+                statusColor: 'black',
               });
               return response.json();
 
