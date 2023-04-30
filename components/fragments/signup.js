@@ -83,13 +83,14 @@ class Signup extends Component {
             if (response.status === 201) {
               console.log('Email: ' + this.state.email);
               console.log('Password: ' + this.state.password);
-              this.setState({
+              this.setState({ // TODO: Success notification here
+                isLoading: false,
                 firstName: '',
                 lastName: '',
                 email: '',
                 password: '',
-                statusText: 'Success!',
-                statusColor: 'green',
+                statusText: '',
+                statusColor: 'black',
               });
               navigation.navigate('Login');
             } else if (response.status === 400 || response.status === 500) {
