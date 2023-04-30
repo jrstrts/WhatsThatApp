@@ -50,7 +50,69 @@ class Profile extends Component {
   };
 
   sendUpdate = async () => {
-    console.log('Change Details!');
+    return fetch('http://localhost:3333/api/1.0.0/user/' +
+                  await AsyncStorage.getItem('user_id'), {
+      headers: {
+        'X-Authorization': await AsyncStorage.getItem('session_token'),
+      },
+    })
+        .then((response) => response.json())
+        .then(async (responseJson) => {
+          // const is innapropriate for next line, but eslint doesn't agree
+          // eslint-disable-next-line prefer-const
+
+          let dataToSend = {};
+
+          if (this.state.firstName != responseJson['first_name'] &&
+              this.state.firstName != '') {
+            dataToSend['first_name'] = this.state.firstName;
+          }
+
+          if (this.state.lastName != responseJson['last_name'] &&
+              this.state.lastName != '') {
+            dataToSend['last_name'] = this.state.lastName;
+          }
+
+          if (this.state.email != responseJson['email'] &&
+              this.state.email != '') {
+            dataToSend['email'] = this.state.email;
+          }
+
+          if (this.state.password != '') {
+            dataToSend['password'] = this.state.password;
+          }
+
+          console.log(JSON.stringify(dataToSend));
+
+          if (dataToSend != {}) {
+            return fetch('http://localhost:3333/api/1.0.0/user/' +
+                          await AsyncStorage.getItem('user_id'), {
+              method: 'PATCH',
+              headers: {
+                'X-Authorization': await AsyncStorage.getItem('session_token'),
+                'content-type': 'application/json',
+              },
+              body: JSON.stringify(dataToSend),
+            })
+                .then((response) => {
+                  if (response.status === 200) {
+                    console.log('Update success!');
+                  } else if (response.status === 400) {
+                    console.log('400: Bad Request (bad data)');
+                  } else if (response.status === 403) {
+                    console.log('403: Forbidden (editing wrong user?)');
+                  } else if (response.status === 404) {
+                    console.log('404: Not Found (user does not exist)');
+                  } else if (response.status === 401 ||
+                             response.status === 500) {
+                    console.log('401 or 500: Something has gone wrong!');
+                  }
+                })
+                .catch((error) => {
+                  console.log(error);
+                });
+          }
+        });
   };
 
   logout = async () => {
