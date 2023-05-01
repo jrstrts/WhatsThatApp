@@ -1,23 +1,22 @@
-// import {StyleSheet} from 'react-native';
 import React, {Component} from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import Chats from '../fragments/chat';
-import MessageThread from '../fragments/message-thread';
+import Profile from '../fragments/profile';
+import ChangeDetails from '../fragments/changeDetails';
 
 const Stack = createNativeStackNavigator();
 
-class ChatNav extends Component {
+class ProfileNav extends Component {
   render() {
     return (
       <Stack.Navigator screenOptions={{headerShown: false}} >
-        <Stack.Screen name="Chats" component={Chats} />
+        <Stack.Screen name="Profile" component={Profile} />
         <Stack.Screen
-          name="ChatScreen"
-          component={MessageThread}
+          name="ChangeDetails"
+          component={ChangeDetails}
           options={{headerShown: true}}/>
       </Stack.Navigator>
     );
   }
 }
 
-export default ChatNav;
+export default ProfileNav;

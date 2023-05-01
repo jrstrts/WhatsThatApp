@@ -3,7 +3,7 @@ import React, {Component} from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Contacts from '../fragments/contacts';
 import ChatNav from '../navigators/chatNav';
-import Profile from '../fragments/profile';
+import ProfileNav from '../navigators/profileNav';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import PropTypes from 'prop-types';
 
@@ -40,8 +40,11 @@ class MainAppNav extends Component {
           options={{headerShown: true, title: 'Chats'}}/>
         {/* for some reason the above options remove the back button where
          headerBackVisible does not :) */}
-        <Tab.Screen name="Contacts" component={Contacts} />
-        <Tab.Screen name='Profile' component={Profile} />
+        <Tab.Screen name='Contacts' component={Contacts} />
+        <Tab.Screen
+          name='ProfileNav'
+          component={ProfileNav}
+          options={{headerShown: true, title: 'Profile'}} />
       </Tab.Navigator>
     );
   }
