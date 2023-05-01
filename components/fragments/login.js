@@ -152,13 +152,6 @@ class Login extends Component {
               Need an account?
             </Text>
           </Pressable>
-          <Pressable
-            onPress={() => navigation.navigate('MainAppNav', {screen: 'Chat'})}
-          >
-            <Text style={[loginStyles.elements, loginStyles.linkText]}>
-              Go straight to Chats
-            </Text>
-          </Pressable>
         </View>
 
         <View style={[{padding: 0}, loginStyles.txtContainer]}>
