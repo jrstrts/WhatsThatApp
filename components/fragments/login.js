@@ -23,6 +23,7 @@ class Login extends Component {
     super(props);
 
     this.state = {
+      isProcessing: false,
       email: '',
       password: '',
       statusText: '',
@@ -45,65 +46,74 @@ class Login extends Component {
   };
 
   login = async () => {
-    const pwSchema = new PasswordValidator();
-    pwSchema
-        .is().min(8)
-        .has().uppercase()
-        .has().lowercase()
-        .has().digits(1)
-        .has().symbols(1);
-
-    if (validator.validate(this.state.email) &&
-    pwSchema.validate(this.state.password)) {
-      const sendData = {
-        email: this.state.email,
-        password: this.state.password,
-      };
-
-      return fetch('http://localhost:3333/api/1.0.0/login', {
-        method: 'post',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(sendData),
-      })
-          .then((response) => {
-            if (response.status === 200) {
-              console.log('Email: ' + this.state.email);
-              console.log('Password: ' + this.state.password);
-              this.setState({
-                email: '',
-                password: '',
-                statusText: '',
-                statusColor: 'black',
-              });
-              return response.json();
-
-            // TODO: better error messages with toasts
-            } else if (response.status === 400) {
-              console.log('Bad email/password');
-            } else {
-              console.log('Something went wrong!');
-            }
-          })
-          .then(async (rJson) => {
-            try {
-              console.log(rJson);
-              await AsyncStorage.setItem('user_id', rJson.id);
-              await AsyncStorage.setItem('session_token', rJson.token);
-              this.props.navigation.navigate('MainAppNav', {screen: 'Chat'});
-            } catch (error) {
-              console.log(error);
-              throw 'Something went terribly wrong!';
-            }
-          });
+    if (this.state.isProcessing == true) {
+      console.log('Already processing request!');
     } else {
-      console.log('Email OR password is not valid');
-      this.setState({
-        statusText: 'Email OR password is not valid',
-        statusColor: 'red',
-      });
-      return false;
+      const pwSchema = new PasswordValidator();
+      pwSchema
+          .is().min(8)
+          .has().uppercase()
+          .has().lowercase()
+          .has().digits(1)
+          .has().symbols(1);
+
+      if (validator.validate(this.state.email) &&
+      pwSchema.validate(this.state.password)) {
+        const sendData = {
+          email: this.state.email,
+          password: this.state.password,
+        };
+
+        return fetch('http://localhost:3333/api/1.0.0/login', {
+          method: 'post',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(sendData),
+        })
+            .then((response) => {
+              if (response.status === 200) {
+                console.log('Email: ' + this.state.email);
+                console.log('Password: ' + this.state.password);
+                this.setState({
+                  isProcessing: false,
+                  email: '',
+                  password: '',
+                  statusText: '',
+                  statusColor: 'black',
+                });
+                return response.json();
+
+              // TODO: better error messages with toasts
+              } else if (response.status === 400) {
+                console.log('Bad email/password');
+                this.setState({isProcessing: false});
+              } else {
+                console.log('Something went wrong!');
+                this.setState({isProcessing: false});
+              }
+            })
+            .then(async (rJson) => {
+              try {
+                console.log(rJson);
+                await AsyncStorage.setItem('user_id', rJson.id);
+                await AsyncStorage.setItem('session_token', rJson.token);
+                this.setState({isProcessing: false});
+                this.props.navigation.navigate('MainAppNav', {screen: 'Chat'});
+              } catch (error) {
+                console.log(error);
+                this.setState({isProcessing: false});
+                throw 'Something went terribly wrong!';
+              }
+            });
+      } else {
+        console.log('Email OR password is not valid');
+        this.setState({
+          isProcessing: false,
+          statusText: 'Email OR password is not valid',
+          statusColor: 'red',
+        });
+      }
     }
   };
 

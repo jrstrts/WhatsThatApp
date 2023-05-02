@@ -9,6 +9,7 @@ class Profile extends Component {
 
     this.state = {
       isLoading: true,
+      isProcessing: false,
       firstName: '',
       lastName: '',
       email: '',
@@ -20,28 +21,34 @@ class Profile extends Component {
   };
 
   logout = async () => {
-    console.log('log out');
-
-    return fetch('http://localhost:3333/api/1.0.0/logout', {
-      method: 'post',
-      headers: {
-        'X-Authorization': await AsyncStorage.getItem('session_token'),
-      },
-    })
-        .then(async (response) => {
-          if (response.status === 200) {
-            await AsyncStorage.removeItem('session_token');
-            await AsyncStorage.removeItem('user_id');
-            this.props.navigation.navigate('LoginNav');
-          } else if (response.status === 401) {
-            console.log('Not logged in!');
-            this.props.navigation.navigate('LoginNav');
-          } else if (response.status === 500) {
-            console.log('Server error!');
-          } else {
-            console.log('Something went wrong!');
-          }
-        });
+    if (this.state.isProcessing == true) {
+      console.log('Already processing request!');
+    } else {
+      return fetch('http://localhost:3333/api/1.0.0/logout', {
+        method: 'post',
+        headers: {
+          'X-Authorization': await AsyncStorage.getItem('session_token'),
+        },
+      })
+          .then(async (response) => {
+            if (response.status === 200) {
+              await AsyncStorage.removeItem('session_token');
+              await AsyncStorage.removeItem('user_id');
+              this.setState({isProcessing: false});
+              this.props.navigation.navigate('LoginNav');
+            } else if (response.status === 401) {
+              console.log('Not logged in!');
+              this.setState({isProcessing: false});
+              this.props.navigation.navigate('LoginNav');
+            } else if (response.status === 500) {
+              console.log('Server error!');
+              this.setState({isProcessing: false});
+            } else {
+              console.log('Something went wrong!');
+              this.setState({isProcessing: false});
+            }
+          });
+    }
   };
 
   getDetails = async () => {
