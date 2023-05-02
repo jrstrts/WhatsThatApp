@@ -96,6 +96,7 @@ class ChangeDetails extends Component {
                 .then((response) => {
                   if (response.status === 200) {
                     console.log('Update success!');
+                    this.props.navigation.navigate('Profile');
                   } else if (response.status === 400) {
                     console.log('400: Bad Request (bad data)');
                   } else if (response.status === 403) {

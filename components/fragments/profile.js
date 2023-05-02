@@ -4,6 +4,17 @@ import React, {Component} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 class Profile extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      isLoading: true,
+      firstName: '',
+      lastName: '',
+      email: '',
+    };
+  }
+
   static propTypes = {
     navigation: PropTypes.any,
   };
@@ -33,35 +44,83 @@ class Profile extends Component {
         });
   };
 
+  getDetails = async () => {
+    return fetch('http://localhost:3333/api/1.0.0/user/' +
+                  await AsyncStorage.getItem('user_id'), {
+      headers: {
+        'X-Authorization': await AsyncStorage.getItem('session_token'),
+      },
+    })
+        .then((response) => response.json())
+        .then((responseJson) => {
+          this.setState({
+            isLoading: false,
+            firstName: responseJson['first_name'],
+            lastName: responseJson['last_name'],
+            email: responseJson['email'],
+          });
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+  };
+
+  componentDidMount() {
+    this.getDetails();
+    this.props.navigation.addListener('focus', this.onFocus);
+  }
+
+  onFocus = () => {
+    console.log('Focused');
+    this.setState({isLoading: true});
+    this.getDetails();
+  };
+
   render() {
-    return (
-      <View>
-        <View style={profileStyles.txtContainer}>
-          <Text style={profileStyles.titleText}>Details</Text>
+    if (this.state.isLoading) {
+      return (
+        <View>
+          <Text>Loading...</Text>
         </View>
-        <View style={profileStyles.buttonContainer}>
-          <Pressable
-            style={[profileStyles.submitButton, profileStyles.elements]}
-            onPress={() => {
-              this.props.navigation.navigate('ChangeDetails');
-            }}>
-            <Text style={profileStyles.buttonText}>Edit</Text>
-          </Pressable>
+      );
+    } else {
+      return (
+        <View>
+          <View style={profileStyles.txtContainer}>
+            <Text style={profileStyles.titleText}>Details</Text>
+          </View>
+          <View style={profileStyles.txtContainer}>
+            <Text style={profileStyles.subHeadText}>First Name</Text>
+            <Text style={profileStyles.elements}>{this.state.firstName}</Text>
+            <Text style={profileStyles.subHeadText}>Last Name</Text>
+            <Text style={profileStyles.elements}>{this.state.lastName}</Text>
+            <Text style={profileStyles.subHeadText}>Email</Text>
+            <Text style={profileStyles.elements}>{this.state.email}</Text>
+          </View>
+          <View style={profileStyles.buttonContainer}>
+            <Pressable
+              style={[profileStyles.submitButton, profileStyles.elements]}
+              onPress={() => {
+                this.props.navigation.navigate('ChangeDetails');
+              }}>
+              <Text style={profileStyles.buttonText}>Edit</Text>
+            </Pressable>
+          </View>
+          <View style={profileStyles.txtContainer}>
+            <Text style={profileStyles.titleText}>Account Actions</Text>
+          </View>
+          <View style={profileStyles.buttonContainer}>
+            <Pressable
+              style={[profileStyles.logoutButton, profileStyles.elements]}
+              onPress={() => {
+                this.logout();
+              }}>
+              <Text style={profileStyles.buttonText}>Log Out</Text>
+            </Pressable>
+          </View>
         </View>
-        <View style={profileStyles.txtContainer}>
-          <Text style={profileStyles.titleText}>Account Actions</Text>
-        </View>
-        <View style={profileStyles.buttonContainer}>
-          <Pressable
-            style={[profileStyles.logoutButton, profileStyles.elements]}
-            onPress={() => {
-              this.logout();
-            }}>
-            <Text style={profileStyles.buttonText}>Log Out</Text>
-          </Pressable>
-        </View>
-      </View>
-    );
+      );
+    }
   }
 }
 
@@ -117,6 +176,10 @@ const profileStyles = StyleSheet.create({
   },
   titleText: {
     fontSize: 32,
+    fontWeight: 'bold',
+  },
+  subHeadText: {
+    fontSize: 24,
     fontWeight: 'bold',
   },
 });
