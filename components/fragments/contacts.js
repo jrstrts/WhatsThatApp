@@ -1,7 +1,8 @@
-import {ScrollView, FlatList, View, Text} from 'react-native';
+import {ScrollView, FlatList, View, Text, Pressable} from 'react-native';
 import React, {Component} from 'react';
 import User from '../elements/user';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import PropTypes from 'prop-types';
 
 class Contacts extends Component {
   constructor(props) {
@@ -15,6 +16,10 @@ class Contacts extends Component {
       contactData: [],
     };
   }
+
+  static propTypes = {
+    navigation: PropTypes.any,
+  };
 
   getContacts = async () => {
     return fetch('http://localhost:3333/api/1.0.0/contacts', {
@@ -51,9 +56,13 @@ class Contacts extends Component {
           <FlatList
             data={this.state.contactData}
             renderItem={({item}) => (
-              <User
-                contactName={`${item.first_name} ${item.last_name}`}
-              />
+              <Pressable onPress={() =>
+                this.props.navigation.navigate('ContactUser')}
+              >
+                <User
+                  contactName={`${item.first_name} ${item.last_name}`}
+                />
+              </Pressable>
             )}
           />
         </ScrollView>
