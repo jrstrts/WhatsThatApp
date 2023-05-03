@@ -69,7 +69,7 @@ class MainAppNav extends Component {
                     'ContactsNav', {screen: 'Search'} )}
                 style={{paddingRight: 10}}
               >
-                <Ionicons name="add-outline" size={32} />
+                <Ionicons name="search" size={32} />
               </Pressable>
             ),
           }}

@@ -9,6 +9,7 @@ import {
 import React, {Component} from 'react';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import PropTypes from 'prop-types';
 
 import User from '../elements/user';
 
@@ -24,6 +25,10 @@ class Search extends Component {
       pageNo: 1,
     };
   }
+
+  static propTypes = {
+    navigation: PropTypes.any,
+  };
 
   handleSearchEntryInput = (searchEntry) => {
     this.setState({searchEntry: searchEntry});
@@ -105,7 +110,7 @@ class Search extends Component {
         <View>
           <View style={SearchStyles.txtContainer}>
             <Text style={SearchStyles.titleText}>Search</Text>
-            <Text>Search for a user to add to your contacts</Text>
+            <Text>Search for a user to add or remove from your contacts</Text>
           </View>
           <View style={SearchStyles.inputContainer}>
             <TextInput
@@ -129,7 +134,13 @@ class Search extends Component {
           <FlatList
             data={this.state.searchData}
             renderItem={({item}) => (
-              <Pressable onPress={() => console.log('Contact Pressed!')}>
+              <Pressable onPress={() =>
+                this.props.navigation.navigate('ContactUser', {
+                  userID: item.user_id,
+                  firstName: item.given_name,
+                  lastName: item.family_name,
+                  email: item.email,
+                })}>
                 <User
                   contactName={`${item.given_name} ${item.family_name}`}
                 />
