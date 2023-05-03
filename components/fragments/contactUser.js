@@ -3,6 +3,8 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+import ContactUserDetails from '../elements/contactUserDetails';
+
 class ContactUser extends Component {
   constructor(props) {
     super(props);
@@ -113,23 +115,11 @@ class ContactUser extends Component {
     } else if (this.state.isContact === true) {
       return (
         <View>
-          <View style={userStyles.txtContainer}>
-            <Text style={userStyles.titleText}>Contact Details</Text>
-          </View>
-          <View style={userStyles.txtContainer}>
-            <Text style={userStyles.subHeadText}>First Name</Text>
-            <Text style={userStyles.elements}>
-              {this.props.route.params.firstName}
-            </Text>
-            <Text style={userStyles.subHeadText}>Last Name</Text>
-            <Text style={userStyles.elements}>
-              {this.props.route.params.lastName}
-            </Text>
-            <Text style={userStyles.subHeadText}>Email</Text>
-            <Text style={userStyles.elements}>
-              {this.props.route.params.email}
-            </Text>
-          </View>
+          <ContactUserDetails
+            firstName={this.props.route.params.firstName}
+            lastName={this.props.route.params.lastName}
+            email={this.props.route.params.email}
+          />
 
           <View style={userStyles.txtContainer}>
             <Text style={userStyles.titleText}>Actions</Text>
@@ -148,23 +138,11 @@ class ContactUser extends Component {
     } else if (this.state.isContact === false) {
       return (
         <View>
-          <View style={userStyles.txtContainer}>
-            <Text style={userStyles.titleText}>Contact Details</Text>
-          </View>
-          <View style={userStyles.txtContainer}>
-            <Text style={userStyles.subHeadText}>First Name</Text>
-            <Text style={userStyles.elements}>
-              {this.props.route.params.firstName}
-            </Text>
-            <Text style={userStyles.subHeadText}>Last Name</Text>
-            <Text style={userStyles.elements}>
-              {this.props.route.params.lastName}
-            </Text>
-            <Text style={userStyles.subHeadText}>Email</Text>
-            <Text style={userStyles.elements}>
-              {this.props.route.params.email}
-            </Text>
-          </View>
+          <ContactUserDetails
+            firstName={this.props.route.params.firstName}
+            lastName={this.props.route.params.lastName}
+            email={this.props.route.params.email}
+          />
 
           <View style={userStyles.txtContainer}>
             <Text style={userStyles.titleText}>Actions</Text>
