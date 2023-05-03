@@ -41,6 +41,12 @@ class Contacts extends Component {
 
   componentDidMount() {
     this.getContacts();
+    this.props.navigation.addListener('focus', this.onFocus);
+  }
+
+  onFocus = () => {
+    this.setState({isLoading: true});
+    this.getContacts();
   }
 
   render() {
@@ -57,7 +63,12 @@ class Contacts extends Component {
             data={this.state.contactData}
             renderItem={({item}) => (
               <Pressable onPress={() =>
-                this.props.navigation.navigate('ContactUser')}
+                this.props.navigation.navigate('ContactUser', {
+                  userID: item.user_id,
+                  firstName: item.first_name,
+                  lastName: item.last_name,
+                  email: item.email,
+                })}
               >
                 <User
                   contactName={`${item.first_name} ${item.last_name}`}
