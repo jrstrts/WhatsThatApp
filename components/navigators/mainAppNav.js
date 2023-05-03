@@ -4,7 +4,8 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import PropTypes from 'prop-types';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import {Pressable} from 'react-native';
+import {FontAwesome} from '@expo/vector-icons';
+import {Pressable, View, StyleSheet} from 'react-native';
 
 import ContactsNav from '../navigators/contactsNav';
 import ChatNav from '../navigators/chatNav';
@@ -64,13 +65,22 @@ class MainAppNav extends Component {
               return <Ionicons name={iconName} size={size} color={color} />;
             },
             headerRight: () => (
-              <Pressable
-                onPress={() => this.props.navigation.navigate(
-                    'ContactsNav', {screen: 'Search'} )}
-                style={{paddingRight: 10}}
-              >
-                <Ionicons name="search" size={32} />
-              </Pressable>
+              <View style={AppNavStyles.buttonContainer}>
+                <Pressable
+                  onPress={() => this.props.navigation.navigate(
+                      'ContactsNav', {screen: 'Blocked'} )}
+                  style={{paddingRight: 20}}
+                >
+                  <FontAwesome name="ban" size={32} />
+                </Pressable>
+                <Pressable
+                  onPress={() => this.props.navigation.navigate(
+                      'ContactsNav', {screen: 'Search'} )}
+                  style={{paddingRight: 20}}
+                >
+                  <Ionicons name="search" size={32} />
+                </Pressable>
+              </View>
             ),
           }}
         />
@@ -93,7 +103,10 @@ class MainAppNav extends Component {
   }
 }
 
-export default MainAppNav;
+const AppNavStyles = StyleSheet.create({
+  buttonContainer: {
+    flexDirection: 'row',
+  },
+});
 
-{/* <Tab.Screen name="Messages" component={MessageThread} />
-<Tab.Screen name="Contacts" component={Contacts} /> */}
+export default MainAppNav;
