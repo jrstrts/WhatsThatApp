@@ -96,6 +96,52 @@ class ContactUser extends Component {
         });
   };
 
+  unblockUser = async () => {
+    return fetch(`http://localhost:3333/api/1.0.0/user/${this.props.route.params.userID}/block`, {
+      method: 'DELETE',
+      headers: {
+        'X-Authorization': await AsyncStorage.getItem('session_token'),
+      },
+    })
+        .then((response) => {
+          if (response.status === 200) {
+            console.log('200: OK');
+            this.props.navigation.goBack();
+          } else if (response.status === 400) {
+            console.log('400: Unblocking yourself');
+          } else if (response.status === 401) {
+            console.log('401: Not Logged in');
+          } else if (response.status === 404) {
+            console.log('404: User not found');
+          } else {
+            console.log('Something went wrong!');
+          }
+        });
+  };
+
+  blockUser = async () => {
+    return fetch(`http://localhost:3333/api/1.0.0/user/${this.props.route.params.userID}/block`, {
+      method: 'POST',
+      headers: {
+        'X-Authorization': await AsyncStorage.getItem('session_token'),
+      },
+    })
+        .then((response) => {
+          if (response.status === 200) {
+            console.log('200: OK');
+            this.props.navigation.goBack();
+          } else if (response.status === 400) {
+            console.log('400: Blocking yourself');
+          } else if (response.status === 401) {
+            console.log('401: Not Logged in');
+          } else if (response.status === 404) {
+            console.log('404: User not found');
+          } else {
+            console.log('Something went wrong!');
+          }
+        });
+  };
+
   componentDidMount() {
     this.props.navigation.addListener('focus', this.onFocus);
   }
