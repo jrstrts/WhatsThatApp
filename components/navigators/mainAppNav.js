@@ -1,11 +1,15 @@
 // import {StyleSheet} from 'react-native';
 import React, {Component} from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import PropTypes from 'prop-types';
+import Ionicons from '@expo/vector-icons/Ionicons';
+import { Pressable } from 'react-native';
+
 import ContactsNav from '../navigators/contactsNav';
 import ChatNav from '../navigators/chatNav';
 import ProfileNav from '../navigators/profileNav';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import PropTypes from 'prop-types';
+
 
 const Tab = createBottomTabNavigator();
 
@@ -43,7 +47,18 @@ class MainAppNav extends Component {
         <Tab.Screen
           name='ContactsNav'
           component={ContactsNav}
-          options={{headerShown: true, title: 'Contacts'}}
+          options={{
+            headerShown: true,
+            title: 'Contacts',
+            headerRight: () => (
+              <Pressable
+                onPress={() => console.log('Button!')}
+                style={{paddingRight: 10}}
+              >
+                <Ionicons name="add-outline" size={32} />
+              </Pressable>
+            ),
+          }}
         />
         <Tab.Screen
           name='ProfileNav'
