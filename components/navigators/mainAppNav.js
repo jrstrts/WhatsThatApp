@@ -41,7 +41,15 @@ class MainAppNav extends Component {
         <Tab.Screen
           name="ChatNav"
           component={ChatNav}
-          options={{headerShown: true, title: 'Chats'}}/>
+          options={{
+            headerShown: true,
+            title: 'Chats',
+            tabBarIcon: ({focused, color, size}) => {
+              let iconName = iconName = focused ? 'chatbox' : 'chatbox-outline';
+
+              return <Ionicons name={iconName} size={size} color={color} />;
+            },
+          }}/>
         {/* for some reason the above options remove the back button where
          headerBackVisible does not :) */}
         <Tab.Screen
@@ -50,6 +58,11 @@ class MainAppNav extends Component {
           options={{
             headerShown: true,
             title: 'Contacts',
+            tabBarIcon: ({focused, color, size}) => {
+              let iconName = iconName = focused ? 'person' : 'person-outline';
+
+              return <Ionicons name={iconName} size={size} color={color} />;
+            },
             headerRight: () => (
               <Pressable
                 onPress={() => console.log('Button!')}
@@ -63,7 +76,17 @@ class MainAppNav extends Component {
         <Tab.Screen
           name='ProfileNav'
           component={ProfileNav}
-          options={{headerShown: true, title: 'Profile'}} />
+          options={{
+            headerShown: true,
+            title: 'Profile',
+            tabBarIcon: ({focused, color, size}) => {
+              let iconName = iconName = focused ?
+              'person-circle' :
+              'person-circle-outline';
+
+              return <Ionicons name={iconName} size={size} color={color} />;
+            },
+          }} />
       </Tab.Navigator>
     );
   }
