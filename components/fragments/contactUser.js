@@ -6,6 +6,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 class ContactUser extends Component {
   static propTypes = {
     route: PropTypes.any,
+    navigation: PropTypes.any,
   };
 
   removeContact = async () => {

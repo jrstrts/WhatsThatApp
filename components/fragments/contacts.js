@@ -47,7 +47,7 @@ class Contacts extends Component {
   onFocus = () => {
     this.setState({isLoading: true});
     this.getContacts();
-  }
+  };
 
   render() {
     if (this.state.isLoading) {
