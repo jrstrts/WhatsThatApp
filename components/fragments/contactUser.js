@@ -12,7 +12,9 @@ class ContactUser extends Component {
     this.state = {
       isLoading: true,
       contactData: [],
+      blockedUserData: [],
       isContact: false,
+      isBlocked: false,
     };
   };
 
@@ -84,10 +86,39 @@ class ContactUser extends Component {
                   (x) => x.user_id === this.props.route.params.userID,
               ).user_id;
               console.log('user is a contact');
-              this.setState({isContact: true, isLoading: false});
+              this.setState({isContact: true});
             } catch (TypeError) {
               console.log('User is not a contact');
-              this.setState({isContact: false, isLoading: false});
+              this.setState({isContact: false});
+            }
+          });
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+  };
+
+  isBlocked = async () => {
+    this.setState({isLoading: true});
+    return fetch('http://localhost:3333/api/1.0.0/blocked', {
+      headers: {
+        'X-Authorization': await AsyncStorage.getItem('session_token'),
+      },
+    })
+        .then((response) => response.json())
+        .then((responseJson) => {
+          this.setState({
+            blockedUserData: responseJson,
+          }, () => {
+            try {
+              this.state.blockedUserData.find(
+                  (x) => x.user_id === this.props.route.params.userID,
+              ).user_id;
+              console.log('user is blocked');
+              this.setState({isBlocked: true, isLoading: false});
+            } catch (TypeError) {
+              console.log('User is not blocked');
+              this.setState({isBlocked: false, isLoading: false});
             }
           });
         })
@@ -108,7 +139,7 @@ class ContactUser extends Component {
             console.log('200: OK');
             this.props.navigation.goBack();
           } else if (response.status === 400) {
-            console.log('400: Unblocking yourself');
+            console.log('400: Not Allowed');
           } else if (response.status === 401) {
             console.log('401: Not Logged in');
           } else if (response.status === 404) {
@@ -131,7 +162,7 @@ class ContactUser extends Component {
             console.log('200: OK');
             this.props.navigation.goBack();
           } else if (response.status === 400) {
-            console.log('400: Blocking yourself');
+            console.log('400: Not Allowed');
           } else if (response.status === 401) {
             console.log('401: Not Logged in');
           } else if (response.status === 404) {
@@ -148,7 +179,7 @@ class ContactUser extends Component {
 
   onFocus = () => {
     this.isContact();
-    console.log(this.state.isContact);
+    this.isBlocked();
   };
 
   render() {
@@ -156,6 +187,29 @@ class ContactUser extends Component {
       return (
         <View>
           <Text>Loading...</Text>
+        </View>
+      );
+    } else if (this.state.isBlocked === true) {
+      return (
+        <View>
+          <ContactUserDetails
+            firstName={this.props.route.params.firstName}
+            lastName={this.props.route.params.lastName}
+            email={this.props.route.params.email}
+          />
+
+          <View style={userStyles.txtContainer}>
+            <Text style={userStyles.titleText}>Actions</Text>
+          </View>
+          <View style={userStyles.buttonContainer}>
+            <Pressable
+              style={[userStyles.addButton, userStyles.elements]}
+              onPress={() => {
+                this.unblockUser();
+              }}>
+              <Text style={userStyles.buttonText}>Unblock User</Text>
+            </Pressable>
+          </View>
         </View>
       );
     } else if (this.state.isContact === true) {
@@ -179,6 +233,15 @@ class ContactUser extends Component {
               <Text style={userStyles.buttonText}>Remove Contact</Text>
             </Pressable>
           </View>
+          <View style={userStyles.buttonContainer}>
+            <Pressable
+              style={[userStyles.removeButton, userStyles.elements]}
+              onPress={() => {
+                this.blockUser();
+              }}>
+              <Text style={userStyles.buttonText}>Block User</Text>
+            </Pressable>
+          </View>
         </View>
       );
     } else if (this.state.isContact === false) {
@@ -200,15 +263,6 @@ class ContactUser extends Component {
                 this.addContact();
               }}>
               <Text style={userStyles.buttonText}>Add Contact</Text>
-            </Pressable>
-          </View>
-          <View style={userStyles.buttonContainer}>
-            <Pressable
-              style={[userStyles.removeButton, userStyles.elements]}
-              onPress={() => {
-                console.log('Block');
-              }}>
-              <Text style={userStyles.buttonText}>Block User</Text>
             </Pressable>
           </View>
         </View>
