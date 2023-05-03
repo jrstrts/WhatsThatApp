@@ -4,7 +4,7 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import PropTypes from 'prop-types';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { Pressable } from 'react-native';
+import {Pressable} from 'react-native';
 
 import ContactsNav from '../navigators/contactsNav';
 import ChatNav from '../navigators/chatNav';
@@ -65,7 +65,8 @@ class MainAppNav extends Component {
             },
             headerRight: () => (
               <Pressable
-                onPress={() => console.log('Button!')}
+                onPress={() => this.props.navigation.navigate(
+                    'ContactsNav', {screen: 'Search'} )}
                 style={{paddingRight: 10}}
               >
                 <Ionicons name="add-outline" size={32} />
