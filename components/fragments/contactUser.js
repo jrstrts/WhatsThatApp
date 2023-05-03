@@ -132,7 +132,7 @@ class ContactUser extends Component {
           </View>
 
           <View style={userStyles.txtContainer}>
-            <Text style={userStyles.titleText}>Remove Contact</Text>
+            <Text style={userStyles.titleText}>Actions</Text>
           </View>
           <View style={userStyles.buttonContainer}>
             <Pressable
@@ -140,7 +140,7 @@ class ContactUser extends Component {
               onPress={() => {
                 this.removeContact();
               }}>
-              <Text style={userStyles.buttonText}>Remove</Text>
+              <Text style={userStyles.buttonText}>Remove Contact</Text>
             </Pressable>
           </View>
         </View>
@@ -167,7 +167,7 @@ class ContactUser extends Component {
           </View>
 
           <View style={userStyles.txtContainer}>
-            <Text style={userStyles.titleText}>Add Contact</Text>
+            <Text style={userStyles.titleText}>Actions</Text>
           </View>
           <View style={userStyles.buttonContainer}>
             <Pressable
@@ -175,7 +175,16 @@ class ContactUser extends Component {
               onPress={() => {
                 this.addContact();
               }}>
-              <Text style={userStyles.buttonText}>Add</Text>
+              <Text style={userStyles.buttonText}>Add Contact</Text>
+            </Pressable>
+          </View>
+          <View style={userStyles.buttonContainer}>
+            <Pressable
+              style={[userStyles.removeButton, userStyles.elements]}
+              onPress={() => {
+                console.log('Block');
+              }}>
+              <Text style={userStyles.buttonText}>Block User</Text>
             </Pressable>
           </View>
         </View>
@@ -205,7 +214,7 @@ const userStyles = StyleSheet.create({
   removeButton: {
     backgroundColor: 'red',
     borderRadius: 10,
-    width: '30%',
+    width: '40%',
     height: 50,
     justifyContent: 'center',
     alignItems: 'center',
@@ -213,7 +222,7 @@ const userStyles = StyleSheet.create({
   addButton: {
     backgroundColor: '#54ADFF',
     borderRadius: 10,
-    width: '30%',
+    width: '40%',
     height: 50,
     justifyContent: 'center',
     alignItems: 'center',
