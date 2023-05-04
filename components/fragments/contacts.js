@@ -40,7 +40,6 @@ class Contacts extends Component {
   };
 
   componentDidMount() {
-    this.getContacts();
     this.props.navigation.addListener('focus', this.onFocus);
   }
 
