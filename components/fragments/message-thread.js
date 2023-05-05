@@ -1,11 +1,12 @@
 /* eslint-disable max-len */
 
-import {ScrollView, FlatList, View, Text} from 'react-native';
+import {ScrollView, FlatList, View, Text, StyleSheet} from 'react-native';
 import React, {Component} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import PropTypes from 'prop-types';
 
 import Message from '../elements/message';
+import MessageInput from '../elements/messageInput';
 
 class MessageThread extends Component {
   constructor(props) {
@@ -57,7 +58,6 @@ class MessageThread extends Component {
           this.setState({myUserID: myUserID});
         });
     this.setState({isLoading: true});
-    console.log(this.state.myUserID);
     this.getChat();
   };
 
@@ -70,53 +70,25 @@ class MessageThread extends Component {
       );
     } else {
       return (
-        <ScrollView>
-          <FlatList
-            data={this.state.chatMessages}
-            inverted={true}
-            renderItem={({item}) => (
-              <Message
-                type={item.author.user_id == this.state.myUserID ? 'outgoing' : 'incoming'}
-                text={item.message} />
-            )}
-          />
-        </ScrollView>
+        <View style={{flex: 1}}>
+          <ScrollView contentContainerStyle={{flexGrow: 1}}>
+            <FlatList
+              data={this.state.chatMessages}
+              inverted={true}
+              renderItem={({item}) => (
+                <Message
+                  type={item.author.user_id == this.state.myUserID ? 'outgoing' : 'incoming'}
+                  text={item.message} />
+              )}
+            />
+          </ScrollView>
+          <View>
+            <MessageInput chatID={this.props.route.params.chatID} />
+          </View>
+        </View>
       );
     }
   }
 }
 
-/* import {ScrollView} from 'react-native';
-import React, {Component} from 'react';
-import {StatusBar} from 'expo-status-bar';
-import Message from '../elements/message';
-
-class MessageThread extends Component {
-  render() {
-    return (
-      <ScrollView>
-        <Message type='outgoing' text='Something else completely entriely which is far too long for one line'/>
-        <Message type='incoming' text='Lorem ipsum dolor sit amet' />
-        <Message type='outgoing' text='Something else completely entriely which is far too long for one line'/>
-        <Message type='incoming' text='Lorem ipsum dolor sit amet' />
-        <Message type='outgoing' text='Something else completely entriely which is far too long for one line'/>
-        <Message type='incoming' text='Lorem ipsum dolor sit amet' />
-        <Message type='outgoing' text='Something else completely entriely which is far too long for one line'/>
-        <Message type='incoming' text='Lorem ipsum dolor sit amet' />
-        <Message type='outgoing' text='Something else completely entriely which is far too long for one line'/>
-        <Message type='incoming' text='Lorem ipsum dolor sit amet' />
-        <Message type='outgoing' text='Something else completely entriely which is far too long for one line'/>
-        <Message type='incoming' text='Lorem ipsum dolor sit amet' />
-        <Message type='outgoing' text='Something else completely entriely which is far too long for one line'/>
-        <Message type='incoming' text='Lorem ipsum dolor sit amet' />
-        <Message type='outgoing' text='Something else completely entriely which is far too long for one line'/>
-        <Message type='incoming' text='Lorem ipsum dolor sit amet' />
-        <Message type='incoming' text='Something else completely entriely which is far too long for one line'/>
-        <Message type='incoming' text='Lorem ipsum dolor sit amet' />
-        <StatusBar style='auto' />
-      </ScrollView>
-    );
-  }
-}
-*/
 export default MessageThread;

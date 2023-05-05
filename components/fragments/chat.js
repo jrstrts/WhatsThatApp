@@ -18,6 +18,7 @@ class Chats extends Component {
       lastName: '',
       lastMessage: '',
       chatData: [],
+      myUserID: null,
     };
   };
 
@@ -47,7 +48,11 @@ class Chats extends Component {
     this.props.navigation.addListener('focus', this.onFocus);
   }
 
-  onFocus = () => {
+  onFocus = async () => {
+    await AsyncStorage.getItem('user_id')
+        .then((myUserID) => {
+          this.setState({myUserID: myUserID});
+        });
     this.setState({isLoading: true});
     this.getChats();
   };
@@ -72,7 +77,9 @@ class Chats extends Component {
               })}>
                 <User
                   contactName={`${item.name}`}
-                  msgText={`${item.last_message.message}`}
+                  msgText={item.last_message.author.user_id == this.state.myUserID ?
+                    `You: ${item.last_message.message}` :
+                    `${item.last_message.message}`}
                 />
               </Pressable>
             )}
