@@ -67,7 +67,9 @@ class Chats extends Component {
           <FlatList
             data={this.state.chatData}
             renderItem={({item}) => (
-              <Pressable onPress={() => navigation.navigate('ChatScreen')}>
+              <Pressable onPress={() => navigation.navigate('ChatScreen', {
+                chatID: item.chat_id,
+              })}>
                 <User
                   contactName={`${item.name}`}
                   msgText={`${item.last_message.message}`}
