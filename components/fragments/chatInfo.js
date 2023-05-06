@@ -68,14 +68,20 @@ class ChatInfo extends Component {
             </Text>
             <Text style={ChatInfoStyles.subHeadText}>Creator</Text>
             <Text style={ChatInfoStyles.elements}>
-              {this.state.chatData.creator.first_name} {this.state.chatData.creator.last_name}
+              {
+                this.state.chatData.creator.first_name
+              } {
+                this.state.chatData.creator.last_name
+              }
             </Text>
           </View>
           <View style={ChatInfoStyles.buttonContainer}>
             <Pressable
               style={[ChatInfoStyles.submitButton, ChatInfoStyles.elements]}
               onPress={() => {
-                console.log('Edit!');
+                this.props.navigation.navigate('EditChatInfo', {
+                  chatID: this.props.route.params.chatID,
+                });
               }}>
               <Text style={ChatInfoStyles.buttonText}>Edit</Text>
             </Pressable>
