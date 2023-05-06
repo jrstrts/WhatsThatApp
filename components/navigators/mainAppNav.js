@@ -50,6 +50,17 @@ class MainAppNav extends Component {
 
               return <Ionicons name={iconName} size={size} color={color} />;
             },
+            headerRight: () => (
+              <View style={AppNavStyles.buttonContainer}>
+                <Pressable
+                  onPress={() => this.props.navigation.navigate(
+                      'ChatNav', {screen: 'AddChat'} )}
+                  style={{paddingRight: 20}}
+                >
+                  <Ionicons name="add" size={32} />
+                </Pressable>
+              </View>
+            ),
           }}/>
         {/* for some reason the above options remove the back button where
          headerBackVisible does not :) */}

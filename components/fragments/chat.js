@@ -57,6 +57,27 @@ class Chats extends Component {
     this.getChats();
   };
 
+  /**
+  * function determine the chat preview message to be displayed
+  * @param {object} lastMessage - JSON object 'last_message' from API response
+  * @return {string} - The string to be displayed as preview text for a chat,
+  * either:
+  * * the last message, if another person sent it
+  * * the last message with "You: " appended to the start if you sent it
+  * * empty string if no messages have ever been sent
+  */
+  getMessageText(lastMessage) {
+    let messageText;
+    if (Object.keys(lastMessage).length !== 0) {
+      lastMessage.author.user_id == this.state.myUserID ?
+      messageText = `You: ${lastMessage.message}` :
+      messageText = `${lastMessage.message}`;
+    } else {
+      messageText = '';
+    }
+    return messageText;
+  }
+
   render() {
     const navigation = this.props.navigation;
 
@@ -77,9 +98,8 @@ class Chats extends Component {
               })}>
                 <User
                   contactName={`${item.name}`}
-                  msgText={item.last_message.author.user_id == this.state.myUserID ?
-                    `You: ${item.last_message.message}` :
-                    `${item.last_message.message}`}
+                  msgText={this.getMessageText(
+                      item.last_message)}
                 />
               </Pressable>
             )}

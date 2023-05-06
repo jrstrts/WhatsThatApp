@@ -1,6 +1,6 @@
 /* eslint-disable max-len */
 
-import {ScrollView, FlatList, View, Text, StyleSheet} from 'react-native';
+import {ScrollView, FlatList, View, Text} from 'react-native';
 import React, {Component} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import PropTypes from 'prop-types';

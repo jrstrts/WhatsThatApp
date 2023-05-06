@@ -1,8 +1,10 @@
 // import {StyleSheet} from 'react-native';
 import React, {Component} from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
+
 import Chats from '../fragments/chat';
 import MessageThread from '../fragments/message-thread';
+import AddChat from '../fragments/addChat';
 
 const Stack = createNativeStackNavigator();
 
@@ -14,7 +16,11 @@ class ChatNav extends Component {
         <Stack.Screen
           name="ChatScreen"
           component={MessageThread}
-          options={{headerShown: true}}/>
+          options={{headerShown: true}} />
+        <Stack.Screen
+          name='AddChat'
+          component={AddChat}
+          options={{headerShown: true}} />
       </Stack.Navigator>
     );
   }
