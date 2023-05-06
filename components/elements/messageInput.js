@@ -7,6 +7,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 class MessageInput extends Component {
   static propTypes = {
     chatID: PropTypes.any.isRequired,
+    navigation: PropTypes.any,
   };
 
   constructor(props) {
@@ -75,6 +76,12 @@ class MessageInput extends Component {
         >
           <Ionicons name='send' size={24} />
         </Pressable>
+        <Pressable
+          style={MessageInputStyles.searchButton}
+          onPress={() => this.props.navigation.navigate('ChatInfo')}
+        >
+          <Ionicons name='information-circle-outline' size={30} />
+        </Pressable>
       </View>
     );
   }
@@ -85,12 +92,12 @@ const MessageInputStyles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'flex-start',
     alignItems: 'center',
-    paddingLeft: '10%',
+    paddingLeft: '5%',
   },
   inputs: {
     borderWidth: 1,
     borderRadius: 10,
-    width: '75%',
+    width: '70%',
     height: 50,
     backgroundColor: 'lightgrey',
     borderColor: '#fff',
@@ -108,6 +115,7 @@ const MessageInputStyles = StyleSheet.create({
     height: 45,
     justifyContent: 'center',
     alignItems: 'center',
+    marginRight: 10,
   },
 });
 

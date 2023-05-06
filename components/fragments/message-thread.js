@@ -83,7 +83,7 @@ class MessageThread extends Component {
             />
           </ScrollView>
           <View>
-            <MessageInput chatID={this.props.route.params.chatID} />
+            <MessageInput chatID={this.props.route.params.chatID} navigation={this.props.navigation}/>
           </View>
         </View>
       );
