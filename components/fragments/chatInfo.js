@@ -1,4 +1,6 @@
-import {View, Text, Pressable, StyleSheet, FlatList} from 'react-native';
+import {
+  View, Text, Pressable, StyleSheet, FlatList, ScrollView,
+} from 'react-native';
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -59,7 +61,7 @@ class ChatInfo extends Component {
       );
     } else {
       return (
-        <View>
+        <ScrollView>
           <View style={ChatInfoStyles.txtContainer}>
             <Text style={ChatInfoStyles.titleText}>Details</Text>
             <Text style={ChatInfoStyles.subHeadText}>Chat Name</Text>
@@ -105,7 +107,18 @@ class ChatInfo extends Component {
               </Pressable>
             )}
           />
-        </View>
+          <View style={ChatInfoStyles.buttonContainer}>
+            <Pressable
+              style={[ChatInfoStyles.submitButton, ChatInfoStyles.elements]}
+              onPress={() => {
+                this.props.navigation.navigate('AddUserChat', {
+                  chatID: this.props.route.params.chatID,
+                });
+              }}>
+              <Text style={ChatInfoStyles.buttonText}>Add user</Text>
+            </Pressable>
+          </View>
+        </ScrollView>
       );
     }
   }

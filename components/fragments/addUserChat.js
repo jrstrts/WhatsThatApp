@@ -13,7 +13,7 @@ import PropTypes from 'prop-types';
 
 import User from '../elements/user';
 
-class Search extends Component {
+class AddUserChat extends Component {
   constructor(props) {
     super(props);
 
@@ -42,7 +42,7 @@ class Search extends Component {
 
     return fetch('http://localhost:3333/api/1.0.0/search/?q=' +
                   this.state.searchEntry +
-                  '&search_in=all&limit=5&offset=' +
+                  '&search_in=contacts&limit=5&offset=' +
                   (this.state.pageNo-1)*5, {
       headers: {
         'X-Authorization': await AsyncStorage.getItem('session_token'),
@@ -75,6 +75,33 @@ class Search extends Component {
         this.getSearchResults();
       });
     }
+  };
+
+  addUserToChat = async (userID) => {
+    return fetch(`http://localhost:3333/api/1.0.0/chat/${this.props.route.params.chatID}/user/${userID}`, {
+      method: 'POST',
+      headers: {
+        'X-Authorization': await AsyncStorage.getItem('session_token'),
+      },
+    })
+        .then((response) => {
+          if (response.status === 200) {
+            console.log('Update success!');
+            this.props.navigation.goBack();
+          } else if (response.status === 400) {
+            console.log('400: Bad Request (bad data)');
+          } else if (response.status === 403) {
+            console.log('403: Forbidden (editing wrong chat?)');
+          } else if (response.status === 404) {
+            console.log('404: Not Found (chat does not exist)');
+          } else if (response.status === 401 ||
+                    response.status === 500) {
+            console.log('401 or 500: Something has gone wrong!');
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
   };
 
   render() {
@@ -110,7 +137,7 @@ class Search extends Component {
         <View>
           <View style={SearchStyles.txtContainer}>
             <Text style={SearchStyles.titleText}>Search</Text>
-            <Text>Search for a user to add or remove from your contacts</Text>
+            <Text>Search for a user to add to the chat</Text>
           </View>
           <View style={SearchStyles.inputContainer}>
             <TextInput
@@ -134,13 +161,7 @@ class Search extends Component {
           <FlatList
             data={this.state.searchData}
             renderItem={({item}) => (
-              <Pressable onPress={() =>
-                this.props.navigation.navigate('ContactUser', {
-                  userID: item.user_id,
-                  firstName: item.given_name,
-                  lastName: item.family_name,
-                  email: item.email,
-                })}>
+              <Pressable onPress={() => this.addUserToChat(item.user_id)}>
                 <User
                   contactName={`${item.given_name} ${item.family_name}`}
                 />
@@ -225,4 +246,4 @@ const SearchStyles = StyleSheet.create({
   },
 });
 
-export default Search;
+export default AddUserChat;
