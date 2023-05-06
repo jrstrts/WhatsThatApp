@@ -78,8 +78,9 @@ class MessageInput extends Component {
         </Pressable>
         <Pressable
           style={MessageInputStyles.searchButton}
-          onPress={() => this.props.navigation.navigate('ChatInfo')}
-        >
+          onPress={() => this.props.navigation.navigate('ChatInfo', {
+            chatID: this.props.chatID,
+          })} >
           <Ionicons name='information-circle-outline' size={30} />
         </Pressable>
       </View>
