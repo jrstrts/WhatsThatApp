@@ -7,6 +7,7 @@ class Message extends Component {
     type: PropTypes.string.isRequired,
     text: PropTypes.string.isRequired,
     senderName: PropTypes.string,
+    unixTime: PropTypes.number,
   };
 
   constructor(props) {
@@ -20,6 +21,22 @@ class Message extends Component {
     };
   }
 
+  unixToDatetime = (unixTime) => {
+    const date = new Date(unixTime);
+
+    const hours = date.getHours();
+    const minutes = date.getMinutes();
+    const seconds = date.getSeconds();
+    const year = date.getFullYear();
+
+    const time = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const day = date.getDate().toString().padStart(2, '0');
+
+    return `${year}-${month}-${day} ${time}`;
+  };
+
   render() {
     if (this.props.type == 'incoming') {
       return (
@@ -30,6 +47,9 @@ class Message extends Component {
           ]} >
             <Text style={messageStyles.nameText}>{this.props.senderName}</Text>
             <Text style={messageStyles.messageText} >{this.props.text}</Text>
+            <Text style={[messageStyles.dateText, {color: 'grey'}]}>
+              {this.unixToDatetime(this.props.unixTime)}
+            </Text>
           </View>
         </View>
       );
@@ -41,6 +61,9 @@ class Message extends Component {
             messageStyles.outgoingMessageBackground,
           ]} >
             <Text style={messageStyles.messageText} >{this.props.text}</Text>
+            <Text style={[messageStyles.dateText, {color: 'lightgrey'}]}>
+              {this.unixToDatetime(this.props.unixTime)}
+            </Text>
           </View>
         </View>
       );
@@ -82,6 +105,13 @@ const messageStyles = StyleSheet.create({
     paddingLeft: 10,
     fontSize: 12,
     fontWeight: 'bold',
+  },
+  dateText: {
+    paddingRight: 10,
+    paddingBottom: 10,
+    paddingLeft: 10,
+    fontSize: 10,
+    fontWeight: 'normal',
   },
 });
 

@@ -80,6 +80,7 @@ class MessageThread extends Component {
                   type={item.author.user_id == this.state.myUserID ? 'outgoing' : 'incoming'}
                   text={item.message}
                   senderName={`${item.author.first_name} ${item.author.last_name}`}
+                  unixTime={item.timestamp}
                 />
               )}
             />
