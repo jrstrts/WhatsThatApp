@@ -117,6 +117,15 @@ class ChatInfo extends Component {
               }}>
               <Text style={ChatInfoStyles.buttonText}>Add user</Text>
             </Pressable>
+            <Pressable
+              style={[ChatInfoStyles.removeButton, ChatInfoStyles.elements]}
+              onPress={() => {
+                this.props.navigation.navigate('RemoveUserChat', {
+                  chatID: this.props.route.params.chatID,
+                });
+              }}>
+              <Text style={ChatInfoStyles.buttonText}>Remove User</Text>
+            </Pressable>
           </View>
         </ScrollView>
       );
@@ -130,6 +139,7 @@ const ChatInfoStyles = StyleSheet.create({
     alignItems: 'center',
     paddingRight: '10%',
     padding: 15,
+    flexDirection: 'row',
   },
   txtContainer: {
     justifyContent: 'center',
@@ -142,6 +152,15 @@ const ChatInfoStyles = StyleSheet.create({
     marginTop: 5,
     marginBottom: 5,
   },
+  removeButton: {
+    backgroundColor: 'red',
+    borderRadius: 10,
+    width: '30%',
+    height: 50,
+    justifyContent: 'center',
+    alignItems: 'center',
+    margin: 5,
+  },
   submitButton: {
     backgroundColor: '#54ADFF',
     borderRadius: 10,
@@ -149,6 +168,7 @@ const ChatInfoStyles = StyleSheet.create({
     height: 50,
     justifyContent: 'center',
     alignItems: 'center',
+    margin: 5,
   },
   buttonText: {
     color: 'white',
