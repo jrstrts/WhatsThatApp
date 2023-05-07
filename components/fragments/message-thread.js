@@ -81,6 +81,9 @@ class MessageThread extends Component {
                   text={item.message}
                   senderName={`${item.author.first_name} ${item.author.last_name}`}
                   unixTime={item.timestamp}
+                  chatID={this.props.route.params.chatID}
+                  messageID={item.message_id}
+                  navigation={this.props.navigation}
                 />
               )}
             />

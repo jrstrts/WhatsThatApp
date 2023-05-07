@@ -10,6 +10,7 @@ import ChatInfo from '../fragments/chatInfo';
 import EditChatInfo from '../fragments/editChatInfo';
 import AddUserChat from '../fragments/addUserChat';
 import RemoveUserChat from '../fragments/removeUserChat';
+import EditMessage from '../fragments/editMessage';
 
 const Stack = createNativeStackNavigator();
 
@@ -45,6 +46,10 @@ class ChatNav extends Component {
         <Stack.Screen
           name='RemoveUserChat'
           component={RemoveUserChat}
+          options={{headerShown: true}} />
+        <Stack.Screen
+          name='EditMessage'
+          component={EditMessage}
           options={{headerShown: true}} />
       </Stack.Navigator>
     );

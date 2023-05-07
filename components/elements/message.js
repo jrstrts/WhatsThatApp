@@ -1,6 +1,7 @@
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, View, Pressable} from 'react-native';
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
+import Ionicons from '@expo/vector-icons/Ionicons';
 
 class Message extends Component {
   static propTypes = {
@@ -8,6 +9,9 @@ class Message extends Component {
     text: PropTypes.string.isRequired,
     senderName: PropTypes.string,
     unixTime: PropTypes.number,
+    navigation: PropTypes.any,
+    chatID: PropTypes.any.isRequired,
+    messageID: PropTypes.any.isRequired,
   };
 
   constructor(props) {
@@ -56,6 +60,14 @@ class Message extends Component {
     } else if (this.props.type == 'outgoing') {
       return (
         <View style={messageStyles.outgoingMsgContainer} >
+          <Pressable
+            style={messageStyles.infoButton}
+            onPress={() => this.props.navigation.navigate('EditMessage', {
+              chatID: this.props.chatID,
+              messageID: this.props.messageID,
+            })} >
+            <Ionicons name='create-outline' size={18} />
+          </Pressable>
           <View style={[
             messageStyles.messageBackground,
             messageStyles.outgoingMessageBackground,
@@ -73,10 +85,13 @@ class Message extends Component {
 
 const messageStyles = StyleSheet.create({
   outgoingMsgContainer: {
-    alignItems: 'flex-end',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    flexDirection: 'row',
   },
   incomingMsgContainer: {
-    alignItems: 'flex-start',
+    alignItems: 'center',
+    flexDirection: 'row',
   },
   messageBackground: {
     maxWidth: '80%',
@@ -112,6 +127,14 @@ const messageStyles = StyleSheet.create({
     paddingLeft: 10,
     fontSize: 10,
     fontWeight: 'normal',
+  },
+  infoButton: {
+    backgroundColor: '#BABABA',
+    borderRadius: 100,
+    width: 32,
+    height: 32,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 
