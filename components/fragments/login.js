@@ -73,8 +73,6 @@ class Login extends Component {
         })
             .then((response) => {
               if (response.status === 200) {
-                console.log('Email: ' + this.state.email);
-                console.log('Password: ' + this.state.password);
                 this.setState({
                   isProcessing: false,
                   email: '',
@@ -95,7 +93,6 @@ class Login extends Component {
             })
             .then(async (rJson) => {
               try {
-                console.log(rJson);
                 await AsyncStorage.setItem('user_id', rJson.id);
                 await AsyncStorage.setItem('session_token', rJson.token);
                 this.setState({isProcessing: false});

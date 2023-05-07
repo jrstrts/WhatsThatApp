@@ -78,7 +78,6 @@ class Profile extends Component {
   }
 
   onFocus = () => {
-    console.log('Focused');
     this.setState({isLoading: true});
     this.getDetails();
   };

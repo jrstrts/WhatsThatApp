@@ -81,8 +81,6 @@ class ChangeDetails extends Component {
             dataToSend['password'] = this.state.password;
           }
 
-          console.log(JSON.stringify(dataToSend));
-
           if (dataToSend != {}) {
             return fetch('http://localhost:3333/api/1.0.0/user/' +
                           await AsyncStorage.getItem('user_id'), {

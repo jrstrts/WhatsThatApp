@@ -85,10 +85,8 @@ class ContactUser extends Component {
               this.state.contactData.find(
                   (x) => x.user_id === this.props.route.params.userID,
               ).user_id;
-              console.log('user is a contact');
               this.setState({isContact: true});
             } catch (TypeError) {
-              console.log('User is not a contact');
               this.setState({isContact: false});
             }
           });
@@ -114,10 +112,8 @@ class ContactUser extends Component {
               this.state.blockedUserData.find(
                   (x) => x.user_id === this.props.route.params.userID,
               ).user_id;
-              console.log('user is blocked');
               this.setState({isBlocked: true, isLoading: false});
             } catch (TypeError) {
-              console.log('User is not blocked');
               this.setState({isBlocked: false, isLoading: false});
             }
           });
