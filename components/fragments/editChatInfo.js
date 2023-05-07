@@ -32,19 +32,20 @@ class ChangeDetails extends Component {
           // eslint-disable-next-line prefer-const
           let dataToSend = {};
 
-          if (this.state.chatName != responseJson['name'] &&
-              this.state.chatName != '') {
+          if (this.state.chatName !== responseJson['name'] &&
+              this.state.chatName !== '') {
             dataToSend['name'] = this.state.chatName;
           }
 
-          if (dataToSend != {}) {
+          dataToSend = JSON.stringify(dataToSend);
+          if (dataToSend !== '{}') {
             return fetch(`http://localhost:3333/api/1.0.0/chat/${this.props.route.params.chatID}`, {
               method: 'PATCH',
               headers: {
                 'X-Authorization': await AsyncStorage.getItem('session_token'),
                 'content-type': 'application/json',
               },
-              body: JSON.stringify(dataToSend),
+              body: dataToSend,
             })
                 .then((response) => {
                   if (response.status === 200) {

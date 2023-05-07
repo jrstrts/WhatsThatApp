@@ -62,26 +62,27 @@ class ChangeDetails extends Component {
           // eslint-disable-next-line prefer-const
           let dataToSend = {};
 
-          if (this.state.firstName != responseJson['first_name'] &&
-              this.state.firstName != '') {
+          if (this.state.firstName !== responseJson['first_name'] &&
+              this.state.firstName !== '') {
             dataToSend['first_name'] = this.state.firstName;
           }
 
-          if (this.state.lastName != responseJson['last_name'] &&
-              this.state.lastName != '') {
+          if (this.state.lastName !== responseJson['last_name'] &&
+              this.state.lastName !== '') {
             dataToSend['last_name'] = this.state.lastName;
           }
 
-          if (this.state.email != responseJson['email'] &&
-              this.state.email != '') {
+          if (this.state.email !== responseJson['email'] &&
+              this.state.email !== '') {
             dataToSend['email'] = this.state.email;
           }
 
-          if (this.state.password != '') {
+          if (this.state.password !== '') {
             dataToSend['password'] = this.state.password;
           }
 
-          if (dataToSend != {}) {
+          dataToSend = JSON.stringify(dataToSend);
+          if (dataToSend !== '{}') {
             return fetch('http://localhost:3333/api/1.0.0/user/' +
                           await AsyncStorage.getItem('user_id'), {
               method: 'PATCH',
@@ -89,7 +90,7 @@ class ChangeDetails extends Component {
                 'X-Authorization': await AsyncStorage.getItem('session_token'),
                 'content-type': 'application/json',
               },
-              body: JSON.stringify(dataToSend),
+              body: dataToSend,
             })
                 .then((response) => {
                   if (response.status === 200) {
