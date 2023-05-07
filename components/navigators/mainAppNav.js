@@ -38,7 +38,7 @@ class MainAppNav extends Component {
 
   render() {
     return (
-      <Tab.Navigator>
+      <Tab.Navigator screenOptions={{tabBarLabelPosition: 'beside-icon'}}>
         <Tab.Screen
           name="ChatNav"
           component={ChatNav}
