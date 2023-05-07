@@ -78,7 +78,9 @@ class MessageThread extends Component {
               renderItem={({item}) => (
                 <Message
                   type={item.author.user_id == this.state.myUserID ? 'outgoing' : 'incoming'}
-                  text={item.message} />
+                  text={item.message}
+                  senderName={`${item.author.first_name} ${item.author.last_name}`}
+                />
               )}
             />
           </ScrollView>

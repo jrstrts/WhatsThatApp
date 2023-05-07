@@ -6,6 +6,7 @@ class Message extends Component {
   static propTypes = {
     type: PropTypes.string.isRequired,
     text: PropTypes.string.isRequired,
+    senderName: PropTypes.string,
   };
 
   constructor(props) {
@@ -27,6 +28,7 @@ class Message extends Component {
             messageStyles.messageBackground,
             messageStyles.incomingMessageBackground,
           ]} >
+            <Text style={messageStyles.nameText}>{this.props.senderName}</Text>
             <Text style={messageStyles.messageText} >{this.props.text}</Text>
           </View>
         </View>
@@ -72,6 +74,14 @@ const messageStyles = StyleSheet.create({
     color: 'white',
     padding: 10,
     fontSize: 16,
+  },
+  nameText: {
+    color: 'white',
+    paddingRight: 10,
+    paddingTop: 10,
+    paddingLeft: 10,
+    fontSize: 12,
+    fontWeight: 'bold',
   },
 });
 
