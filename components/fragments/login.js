@@ -90,6 +90,9 @@ class Login extends Component {
                 console.log('Bad email/password');
                 this.setState({
                   isProcessing: false,
+                  visibleModal: 1,
+                  errorMessage:
+                    'Your email or password is invalid, try again',
                 });
               } else {
                 console.log('Something went wrong!');
@@ -104,8 +107,12 @@ class Login extends Component {
                 this.props.navigation.navigate('MainAppNav', {screen: 'Chat'});
               } catch (error) {
                 console.log(error);
-                this.setState({isProcessing: false});
-                throw 'Something went terribly wrong!';
+                this.setState({
+                  isProcessing: false,
+                  visibleModal: 1,
+                  errorMessage:
+                  'There was an error logging in, please try again',
+                });
               }
             });
       } else {
