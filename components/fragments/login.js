@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import PropTypes from 'prop-types';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Modal from 'react-native-modal';
 
 // const passwordValidator = require('password-validator');
 const validator = require('email-validator');
@@ -28,6 +29,8 @@ class Login extends Component {
       password: '',
       statusText: '',
       statusColor: 'black',
+      visibleModal: null,
+      errorMessage: '',
     };
   }
 
@@ -85,7 +88,9 @@ class Login extends Component {
               // TODO: better error messages with toasts
               } else if (response.status === 400) {
                 console.log('Bad email/password');
-                this.setState({isProcessing: false});
+                this.setState({
+                  isProcessing: false,
+                });
               } else {
                 console.log('Something went wrong!');
                 this.setState({isProcessing: false});
@@ -107,8 +112,8 @@ class Login extends Component {
         console.log('Email OR password is not valid');
         this.setState({
           isProcessing: false,
-          statusText: 'Email OR password is not valid',
-          statusColor: 'red',
+          visibleModal: 1,
+          errorMessage: 'Your email or password is incorrect, try again',
         });
       }
     }
@@ -161,15 +166,17 @@ class Login extends Component {
           </Pressable>
         </View>
 
-        <View style={[{padding: 0}, loginStyles.txtContainer]}>
-          <Text
-            style={[
-              {color: this.state.statusColor},
-              loginStyles.elements,
-              loginStyles.statusText]}>
-            {this.state.statusText}
-          </Text>
-        </View>
+        <Modal isVisible={this.state.visibleModal === 1}
+          style={loginStyles.bottomModal}>
+          <View style={loginStyles.modalContent}>
+            <Text>{this.state.errorMessage}</Text>
+            <Pressable onPress={() => this.setState({visibleModal: null})}>
+              <View style={loginStyles.modalButton}>
+                <Text>Close</Text>
+              </View>
+            </Pressable>
+          </View>
+        </Modal>
       </View>
     );
   }
@@ -214,9 +221,6 @@ const loginStyles = StyleSheet.create({
     marginTop: 5,
     marginBottom: 5,
   },
-  statusText: {
-    textAlign: 'center',
-  },
   titleText: {
     fontSize: 48,
     fontWeight: 'bold',
@@ -227,6 +231,27 @@ const loginStyles = StyleSheet.create({
   linkText: {
     color: 'black',
     textDecorationLine: 'underline',
+  },
+  modalContent: {
+    backgroundColor: 'white',
+    padding: 22,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 4,
+    borderColor: 'rgba(0, 0, 0, 0.1)',
+  },
+  bottomModal: {
+    justifyContent: 'flex-end',
+    margin: 0,
+  },
+  modalButton: {
+    backgroundColor: 'lightblue',
+    padding: 12,
+    margin: 16,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 4,
+    borderColor: 'rgba(0, 0, 0, 0.1)',
   },
 });
 
