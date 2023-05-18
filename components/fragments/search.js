@@ -10,6 +10,8 @@ import React, {Component} from 'react';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import PropTypes from 'prop-types';
+import Modal from 'react-native-modal';
+import globalStyles from '../styles/globalStyles';
 
 import User from '../elements/user';
 
@@ -23,6 +25,8 @@ class Search extends Component {
       hasSearched: false,
       searchData: [],
       pageNo: 1,
+      visibleModal: null,
+      errorMessage: '',
     };
   }
 
@@ -58,6 +62,10 @@ class Search extends Component {
         })
         .catch((error) => {
           console.log(error);
+          this.setState({
+            visibleModal: 1,
+            errorMessage: 'There was an error getting search results, check your search and try again',
+          });
         });
   };
 
@@ -103,6 +111,17 @@ class Search extends Component {
           </View>
 
           <View style={SearchStyles.separator}/>
+          <Modal isVisible={this.state.visibleModal === 1}
+            style={globalStyles.bottomModal}>
+            <View style={globalStyles.modalContent}>
+              <Text>{this.state.errorMessage}</Text>
+              <Pressable onPress={() => this.setState({visibleModal: null})}>
+                <View style={globalStyles.modalButton}>
+                  <Text>Close</Text>
+                </View>
+              </Pressable>
+            </View>
+          </Modal>
         </View>
       );
     } else {
@@ -161,6 +180,17 @@ class Search extends Component {
               <Ionicons name='caret-forward' size={32} />
             </Pressable>
           </View>
+          <Modal isVisible={this.state.visibleModal === 1}
+            style={globalStyles.bottomModal}>
+            <View style={globalStyles.modalContent}>
+              <Text>{this.state.errorMessage}</Text>
+              <Pressable onPress={() => this.setState({visibleModal: null})}>
+                <View style={globalStyles.modalButton}>
+                  <Text>Close</Text>
+                </View>
+              </Pressable>
+            </View>
+          </Modal>
         </View>
       );
     }
