@@ -4,6 +4,8 @@ import {
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Modal from 'react-native-modal';
+import globalStyles from '../styles/globalStyles';
 
 import User from '../elements/user';
 
@@ -17,6 +19,8 @@ class ChatInfo extends Component {
       name: '',
       creator: '',
       chatData: [],
+      visibleModal: null,
+      errorMessage: '',
     };
   }
 
@@ -40,6 +44,10 @@ class ChatInfo extends Component {
         })
         .catch((error) => {
           console.log(error);
+          this.setState({
+            visibleModal: 1,
+            errorMessage: 'There was a problem loading this screen, please try again.',
+          });
         });
   };
 
@@ -57,6 +65,17 @@ class ChatInfo extends Component {
       return (
         <View>
           <Text>Loading...</Text>
+          <Modal isVisible={this.state.visibleModal === 1}
+            style={globalStyles.bottomModal}>
+            <View style={globalStyles.modalContent}>
+              <Text>{this.state.errorMessage}</Text>
+              <Pressable onPress={() => this.setState({visibleModal: null})}>
+                <View style={globalStyles.modalButton}>
+                  <Text>Close</Text>
+                </View>
+              </Pressable>
+            </View>
+          </Modal>
         </View>
       );
     } else {
@@ -94,17 +113,9 @@ class ChatInfo extends Component {
           <FlatList
             data={this.state.chatData.members}
             renderItem={({item}) => (
-              <Pressable onPress={() =>
-                this.props.navigation.navigate('ContactUser', {
-                  userID: item.user_id,
-                  firstName: item.first_name,
-                  lastName: item.last_name,
-                  email: item.email,
-                })}>
-                <User
-                  contactName={`${item.first_name} ${item.last_name}`}
-                />
-              </Pressable>
+              <User
+                contactName={`${item.first_name} ${item.last_name}`}
+              />
             )}
           />
           <View style={ChatInfoStyles.buttonContainer}>
