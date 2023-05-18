@@ -2,6 +2,8 @@ import {View, Pressable, Text, StyleSheet} from 'react-native';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Modal from 'react-native-modal';
+import globalStyles from '../styles/globalStyles';
 
 class Profile extends Component {
   constructor(props) {
@@ -13,6 +15,8 @@ class Profile extends Component {
       firstName: '',
       lastName: '',
       email: '',
+      visibleModal: null,
+      errorMessage: '',
     };
   }
 
@@ -40,12 +44,13 @@ class Profile extends Component {
               console.log('Not logged in!');
               this.setState({isProcessing: false});
               this.props.navigation.navigate('LoginNav');
-            } else if (response.status === 500) {
-              console.log('Server error!');
-              this.setState({isProcessing: false});
             } else {
               console.log('Something went wrong!');
-              this.setState({isProcessing: false});
+              this.setState({
+                isProcessing: false,
+                visibleModal: 1,
+                errorMessage: 'There was a problem processing your request, please try again.',
+              });
             }
           });
     }
@@ -69,6 +74,10 @@ class Profile extends Component {
         })
         .catch((error) => {
           console.log(error);
+          this.setState({
+            visibleModal: 1,
+            errorMessage: 'There was a problem getting your details, please try again.',
+          });
         });
   };
 
@@ -87,6 +96,17 @@ class Profile extends Component {
       return (
         <View>
           <Text>Loading...</Text>
+          <Modal isVisible={this.state.visibleModal === 1}
+            style={globalStyles.bottomModal}>
+            <View style={globalStyles.modalContent}>
+              <Text>{this.state.errorMessage}</Text>
+              <Pressable onPress={() => this.setState({visibleModal: null})}>
+                <View style={globalStyles.modalButton}>
+                  <Text>Close</Text>
+                </View>
+              </Pressable>
+            </View>
+          </Modal>
         </View>
       );
     } else {
@@ -124,6 +144,17 @@ class Profile extends Component {
               <Text style={profileStyles.buttonText}>Log Out</Text>
             </Pressable>
           </View>
+          <Modal isVisible={this.state.visibleModal === 1}
+            style={globalStyles.bottomModal}>
+            <View style={globalStyles.modalContent}>
+              <Text>{this.state.errorMessage}</Text>
+              <Pressable onPress={() => this.setState({visibleModal: null})}>
+                <View style={globalStyles.modalButton}>
+                  <Text>Close</Text>
+                </View>
+              </Pressable>
+            </View>
+          </Modal>
         </View>
       );
     }
