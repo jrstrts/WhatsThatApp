@@ -2,6 +2,8 @@ import {View, Text, Pressable, StyleSheet} from 'react-native';
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Modal from 'react-native-modal';
+import globalStyles from '../styles/globalStyles';
 
 import ContactUserDetails from '../elements/contactUserDetails';
 
@@ -15,6 +17,8 @@ class ContactUser extends Component {
       blockedUserData: [],
       isContact: false,
       isBlocked: false,
+      visibleModal: null,
+      errorMessage: '',
     };
   };
 
@@ -36,12 +40,22 @@ class ContactUser extends Component {
             this.props.navigation.goBack();
           } else if (response.status === 400) {
             console.log('400: Removing yourself');
-          } else if (response.status === 401) {
-            console.log('401: Not Logged in');
+            this.setState({
+              visibleModal: 1,
+              errorMessage: 'You cannot remove yourself as a contact',
+            });
           } else if (response.status === 404) {
             console.log('404: User not found');
+            this.setState({
+              visibleModal: 1,
+              errorMessage: 'User was not found, try again',
+            });
           } else {
             console.log('Something went wrong!');
+            this.setState({
+              visibleModal: 1,
+              errorMessage: 'There was a problem processing your request, please try again',
+            });
           }
         });
   };
@@ -58,13 +72,22 @@ class ContactUser extends Component {
             console.log('200: OK');
             this.props.navigation.goBack();
           } else if (response.status === 400) {
-            console.log('400: Removing yourself');
-          } else if (response.status === 401) {
-            console.log('401: Not Logged in');
+            this.setState({
+              visibleModal: 1,
+              errorMessage: 'You cannot remove yourself as a contact',
+            });
           } else if (response.status === 404) {
             console.log('404: User not found');
+            this.setState({
+              visibleModal: 1,
+              errorMessage: 'User was not found, try again',
+            });
           } else {
             console.log('Something went wrong!');
+            this.setState({
+              visibleModal: 1,
+              errorMessage: 'There was a problem processing your request, please try again',
+            });
           }
         });
   };
@@ -93,6 +116,10 @@ class ContactUser extends Component {
         })
         .catch((error) => {
           console.log(error);
+          this.setState({
+            visibleModal: 1,
+            errorMessage: 'There was a problem retrieving this users information, please try again.',
+          });
         });
   };
 
@@ -120,6 +147,10 @@ class ContactUser extends Component {
         })
         .catch((error) => {
           console.log(error);
+          this.setState({
+            visibleModal: 1,
+            errorMessage: 'There was a problem retrieving this users information, please try again.',
+          });
         });
   };
 
@@ -134,14 +165,18 @@ class ContactUser extends Component {
           if (response.status === 200) {
             console.log('200: OK');
             this.props.navigation.goBack();
-          } else if (response.status === 400) {
-            console.log('400: Not Allowed');
-          } else if (response.status === 401) {
-            console.log('401: Not Logged in');
           } else if (response.status === 404) {
             console.log('404: User not found');
+            this.setState({
+              visibleModal: 1,
+              errorMessage: 'User was not found, try again',
+            });
           } else {
             console.log('Something went wrong!');
+            this.setState({
+              visibleModal: 1,
+              errorMessage: 'There was a problem processing your request, please try again',
+            });
           }
         });
   };
@@ -157,14 +192,18 @@ class ContactUser extends Component {
           if (response.status === 200) {
             console.log('200: OK');
             this.props.navigation.goBack();
-          } else if (response.status === 400) {
-            console.log('400: Not Allowed');
-          } else if (response.status === 401) {
-            console.log('401: Not Logged in');
           } else if (response.status === 404) {
             console.log('404: User not found');
+            this.setState({
+              visibleModal: 1,
+              errorMessage: 'User was not found, try again',
+            });
           } else {
             console.log('Something went wrong!');
+            this.setState({
+              visibleModal: 1,
+              errorMessage: 'There was a problem processing your request, please try again',
+            });
           }
         });
   };
@@ -183,6 +222,17 @@ class ContactUser extends Component {
       return (
         <View>
           <Text>Loading...</Text>
+          <Modal isVisible={this.state.visibleModal === 1}
+            style={globalStyles.bottomModal}>
+            <View style={globalStyles.modalContent}>
+              <Text>{this.state.errorMessage}</Text>
+              <Pressable onPress={() => this.setState({visibleModal: null})}>
+                <View style={globalStyles.modalButton}>
+                  <Text>Close</Text>
+                </View>
+              </Pressable>
+            </View>
+          </Modal>
         </View>
       );
     } else if (this.state.isBlocked === true) {
@@ -206,6 +256,17 @@ class ContactUser extends Component {
               <Text style={userStyles.buttonText}>Unblock User</Text>
             </Pressable>
           </View>
+          <Modal isVisible={this.state.visibleModal === 1}
+            style={globalStyles.bottomModal}>
+            <View style={globalStyles.modalContent}>
+              <Text>{this.state.errorMessage}</Text>
+              <Pressable onPress={() => this.setState({visibleModal: null})}>
+                <View style={globalStyles.modalButton}>
+                  <Text>Close</Text>
+                </View>
+              </Pressable>
+            </View>
+          </Modal>
         </View>
       );
     } else if (this.state.isContact === true) {
@@ -238,6 +299,17 @@ class ContactUser extends Component {
               <Text style={userStyles.buttonText}>Block User</Text>
             </Pressable>
           </View>
+          <Modal isVisible={this.state.visibleModal === 1}
+            style={globalStyles.bottomModal}>
+            <View style={globalStyles.modalContent}>
+              <Text>{this.state.errorMessage}</Text>
+              <Pressable onPress={() => this.setState({visibleModal: null})}>
+                <View style={globalStyles.modalButton}>
+                  <Text>Close</Text>
+                </View>
+              </Pressable>
+            </View>
+          </Modal>
         </View>
       );
     } else if (this.state.isContact === false) {
@@ -261,6 +333,17 @@ class ContactUser extends Component {
               <Text style={userStyles.buttonText}>Add Contact</Text>
             </Pressable>
           </View>
+          <Modal isVisible={this.state.visibleModal === 1}
+            style={globalStyles.bottomModal}>
+            <View style={globalStyles.modalContent}>
+              <Text>{this.state.errorMessage}</Text>
+              <Pressable onPress={() => this.setState({visibleModal: null})}>
+                <View style={globalStyles.modalButton}>
+                  <Text>Close</Text>
+                </View>
+              </Pressable>
+            </View>
+          </Modal>
         </View>
       );
     }
