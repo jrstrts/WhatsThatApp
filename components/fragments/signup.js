@@ -8,8 +8,11 @@ import {
   StatusBar,
   Pressable,
 } from 'react-native';
+import Modal from 'react-native-modal';
 // const passwordValidator = require('password-validator');
 const validator = require('email-validator');
+
+import globalStyles from '../styles/globalStyles';
 
 class Signup extends Component {
   constructor(props) {
@@ -21,8 +24,8 @@ class Signup extends Component {
       lastName: '',
       email: '',
       password: '',
-      statusText: '',
-      statusColor: 'black',
+      visibleModal: null,
+      errorMessage: '',
     };
   }
 
@@ -93,8 +96,6 @@ class Signup extends Component {
                   lastName: '',
                   email: '',
                   password: '',
-                  statusText: '',
-                  statusColor: 'black',
                 });
                 navigation.navigate('Login');
               } else if (response.status === 400 || response.status === 500) {
@@ -102,8 +103,9 @@ class Signup extends Component {
                 console.log('Something has gone wrong!');
                 this.setState({
                   isProcessing: false,
-                  statusText: 'There was a problem dealing with your request.',
-                  statusColor: 'red',
+                  visibleModal: 1,
+                  errorMessage:
+                  `There was a problem dealing with your request, please try again`,
                 });
               }
             });
@@ -111,8 +113,9 @@ class Signup extends Component {
         console.log('Email OR password is not valid');
         this.setState({
           isProcessing: false,
-          statusText: 'Email OR password is not valid',
-          statusColor: 'red',
+          visibleModal: 1,
+          errorMessage:
+          `Your email is invalid, or password doesn't meet complexity requirements. Please try again`,
         });
       }
     }
@@ -168,13 +171,17 @@ class Signup extends Component {
             onPress={() => this.login()} >
             <Text style={signupStyles.buttonText}>Sign up</Text>
           </Pressable>
-          <Text
-            style={[
-              {color: this.state.statusColor},
-              signupStyles.elements,
-              signupStyles.statusText]}>
-            {this.state.statusText}
-          </Text>
+          <Modal isVisible={this.state.visibleModal === 1}
+            style={globalStyles.bottomModal}>
+            <View style={globalStyles.modalContent}>
+              <Text>{this.state.errorMessage}</Text>
+              <Pressable onPress={() => this.setState({visibleModal: null})}>
+                <View style={globalStyles.modalButton}>
+                  <Text>Close</Text>
+                </View>
+              </Pressable>
+            </View>
+          </Modal>
         </View>
       </View>
     );
@@ -222,9 +229,6 @@ const signupStyles = StyleSheet.create({
     padding: 5,
     marginTop: 5,
     marginBottom: 5,
-  },
-  statusText: {
-    textAlign: 'center',
   },
   titleText: {
     fontSize: 48,
