@@ -36,7 +36,6 @@ class ChangeDetails extends Component {
           for (let i = 0; i < Object.keys(responseJson.messages).length; i++) {
             if (responseJson.messages[i].message_id ==
               this.props.route.params.messageID) {
-              console.log('id found!');
               this.setState({
                 originalMessageInfo: responseJson.messages[i],
                 isLoading: false,
@@ -47,7 +46,6 @@ class ChangeDetails extends Component {
                 ${this.props.route.params.messageID}`);
             }
           }
-          console.log('no id found????');
         })
         .catch((error) => {
           console.log(error);
