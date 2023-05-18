@@ -32,6 +32,7 @@ class AddUserChat extends Component {
 
   static propTypes = {
     navigation: PropTypes.any,
+    route: PropTypes.any,
   };
 
   handleSearchEntryInput = (searchEntry) => {
