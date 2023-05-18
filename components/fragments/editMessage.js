@@ -2,6 +2,8 @@ import {View, Pressable, Text, StyleSheet, TextInput} from 'react-native';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Modal from 'react-native-modal';
+import globalStyles from '../styles/globalStyles';
 
 class ChangeDetails extends Component {
   constructor(props) {
@@ -12,6 +14,8 @@ class ChangeDetails extends Component {
       originalMessageInfo: [],
       message: '',
       chatInfo: [],
+      visibleModal: null,
+      errorMessage: '',
     };
   }
 
@@ -41,14 +45,15 @@ class ChangeDetails extends Component {
                 isLoading: false,
                 message: responseJson.messages[i].message,
               });
-            } else {
-              console.log(`${responseJson.messages[i].user_id} !=
-                ${this.props.route.params.messageID}`);
             }
           }
         })
         .catch((error) => {
           console.log(error);
+          this.setState({
+            visibleModal: 1,
+            errorMessage: 'Failed to get this messages information, please try again.',
+          });
         });
   };
 
@@ -60,6 +65,10 @@ class ChangeDetails extends Component {
       dataToSend['message'] = this.state.message;
     } else {
       console.log('thats the same, or a blank message');
+      this.setState({
+        visibleModal: 1,
+        errorMessage: 'Your new message is the same as the old one, or blank! Please try again.',
+      });
     }
 
     dataToSend = JSON.stringify(dataToSend);
@@ -81,13 +90,16 @@ class ChangeDetails extends Component {
               this.props.navigation.goBack();
             } else if (response.status === 400) {
               console.log('400: Bad Request (bad data)');
-            } else if (response.status === 403) {
-              console.log('403: Forbidden (editing wrong message?)');
-            } else if (response.status === 404) {
-              console.log('404: Not Found (message does not exist)');
-            } else if (response.status === 401 ||
-                        response.status === 500) {
-              console.log('401 or 500: Something has gone wrong!');
+              this.setState({
+                visibleModal: 1,
+                errorMessage: 'Your message text is invalid, try again.',
+              });
+            } else {
+              console.log('Something has gone wrong!');
+              this.setState({
+                visibleModal: 1,
+                errorMessage: 'There was a problem dealing with your request, please try again',
+              });
             }
           })
           .catch((error) => {
@@ -110,14 +122,18 @@ class ChangeDetails extends Component {
           if (response.status === 200) {
             console.log('200: OK');
             this.props.navigation.goBack();
-          } else if (response.status === 400) {
-            console.log('400: Removing yourself');
-          } else if (response.status === 401) {
-            console.log('401: Not Logged in');
           } else if (response.status === 404) {
-            console.log('404: User not found');
+            console.log('404: Message not found');
+            this.setState({
+              visibleModal: 1,
+              errorMessage: 'Message not found, try again',
+            });
           } else {
             console.log('Something went wrong!');
+            this.setState({
+              visibleModal: 1,
+              errorMessage: 'There was a problem dealing with your request, please try again',
+            });
           }
         });
   };
@@ -136,6 +152,17 @@ class ChangeDetails extends Component {
       return (
         <View>
           <Text>Loading...</Text>
+          <Modal isVisible={this.state.visibleModal === 1}
+            style={globalStyles.bottomModal}>
+            <View style={globalStyles.modalContent}>
+              <Text>{this.state.errorMessage}</Text>
+              <Pressable onPress={() => this.setState({visibleModal: null})}>
+                <View style={globalStyles.modalButton}>
+                  <Text>Close</Text>
+                </View>
+              </Pressable>
+            </View>
+          </Modal>
         </View>
       );
     } else {
@@ -178,6 +205,17 @@ class ChangeDetails extends Component {
               <Text style={ChangeDetailsStyles.buttonText}>Delete</Text>
             </Pressable>
           </View>
+          <Modal isVisible={this.state.visibleModal === 1}
+            style={globalStyles.bottomModal}>
+            <View style={globalStyles.modalContent}>
+              <Text>{this.state.errorMessage}</Text>
+              <Pressable onPress={() => this.setState({visibleModal: null})}>
+                <View style={globalStyles.modalButton}>
+                  <Text>Close</Text>
+                </View>
+              </Pressable>
+            </View>
+          </Modal>
         </View>
       );
     }
