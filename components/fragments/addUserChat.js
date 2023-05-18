@@ -10,6 +10,8 @@ import React, {Component} from 'react';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import PropTypes from 'prop-types';
+import Modal from 'react-native-modal';
+import globalStyles from '../styles/globalStyles';
 
 import User from '../elements/user';
 
@@ -23,6 +25,8 @@ class AddUserChat extends Component {
       hasSearched: false,
       searchData: [],
       pageNo: 1,
+      visibleModal: null,
+      errorMessage: '',
     };
   }
 
@@ -58,6 +62,10 @@ class AddUserChat extends Component {
         })
         .catch((error) => {
           console.log(error);
+          this.setState({
+            visibleModal: 1,
+            errorMessage: 'Search request failed, please try again',
+          });
         });
   };
 
@@ -90,17 +98,30 @@ class AddUserChat extends Component {
             this.props.navigation.goBack();
           } else if (response.status === 400) {
             console.log('400: Bad Request (bad data)');
-          } else if (response.status === 403) {
-            console.log('403: Forbidden (editing wrong chat?)');
+            this.setState({
+              visibleModal: 1,
+              errorMessage: 'Search data is invalid, please try again',
+            });
           } else if (response.status === 404) {
             console.log('404: Not Found (chat does not exist)');
-          } else if (response.status === 401 ||
-                    response.status === 500) {
-            console.log('401 or 500: Something has gone wrong!');
+            this.setState({
+              visibleModal: 1,
+              errorMessage: 'Error editing chat. Please exit to the main screen and try again.',
+            });
+          } else {
+            console.log('401/403/500: Something has gone wrong!');
+            this.setState({
+              visibleModal: 1,
+              errorMessage: 'There was a problem, please try again',
+            });
           }
         })
         .catch((error) => {
           console.log(error);
+          this.setState({
+            visibleModal: 1,
+            errorMessage: 'There was a problem, please try again',
+          });
         });
   };
 
@@ -110,7 +131,7 @@ class AddUserChat extends Component {
         <View>
           <View style={SearchStyles.txtContainer}>
             <Text style={SearchStyles.titleText}>Search</Text>
-            <Text>Search for a user to add to your contacts</Text>
+            <Text>Search for a user to add to the chat</Text>
           </View>
           <View style={SearchStyles.inputContainer}>
             <TextInput
@@ -130,6 +151,17 @@ class AddUserChat extends Component {
           </View>
 
           <View style={SearchStyles.separator}/>
+          <Modal isVisible={this.state.visibleModal === 1}
+            style={globalStyles.bottomModal}>
+            <View style={globalStyles.modalContent}>
+              <Text>{this.state.errorMessage}</Text>
+              <Pressable onPress={() => this.setState({visibleModal: null})}>
+                <View style={globalStyles.modalButton}>
+                  <Text>Close</Text>
+                </View>
+              </Pressable>
+            </View>
+          </Modal>
         </View>
       );
     } else {
@@ -182,6 +214,17 @@ class AddUserChat extends Component {
               <Ionicons name='caret-forward' size={32} />
             </Pressable>
           </View>
+          <Modal isVisible={this.state.visibleModal === 1}
+            style={globalStyles.bottomModal}>
+            <View style={globalStyles.modalContent}>
+              <Text>{this.state.errorMessage}</Text>
+              <Pressable onPress={() => this.setState({visibleModal: null})}>
+                <View style={globalStyles.modalButton}>
+                  <Text>Close</Text>
+                </View>
+              </Pressable>
+            </View>
+          </Modal>
         </View>
       );
     }
