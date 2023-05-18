@@ -20,6 +20,8 @@ module.exports = {
     'require-jsdoc': 'off',
     'linebreak-style': ['error', 'windows'],
     'no-throw-literal': 'off',
-    'max-len': 'warn',
+    // an effort was made to keep max-len on, but fell apart when I didn't
+    // have enough time to make a global strings file
+    'max-len': 'off',
   },
 };
