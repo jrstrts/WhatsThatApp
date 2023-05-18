@@ -9,6 +9,8 @@ import {
 import React, {Component} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import PropTypes from 'prop-types';
+import Modal from 'react-native-modal';
+import globalStyles from '../styles/globalStyles';
 
 import User from '../elements/user';
 
@@ -19,6 +21,8 @@ class RemoveUserChat extends Component {
     this.state = {
       isLoading: false,
       chatData: [],
+      visibleModal: null,
+      errorMessage: '',
     };
   }
 
@@ -46,6 +50,10 @@ class RemoveUserChat extends Component {
         })
         .catch((error) => {
           console.log(error);
+          this.setState({
+            visibleModal: 1,
+            errorMessage: 'Failed to get chat members, please try again',
+          });
         });
   };
 
@@ -60,19 +68,26 @@ class RemoveUserChat extends Component {
           if (response.status === 200) {
             console.log('Update success!');
             this.props.navigation.goBack();
-          } else if (response.status === 400) {
-            console.log('400: Bad Request (bad data)');
-          } else if (response.status === 403) {
-            console.log('403: Forbidden (editing wrong chat?)');
           } else if (response.status === 404) {
             console.log('404: Not Found (chat does not exist)');
-          } else if (response.status === 401 ||
-                    response.status === 500) {
+            this.setState({
+              visibleModal: 1,
+              errorMessage: 'Chat does not exist, please try again',
+            });
+          } else {
             console.log('401 or 500: Something has gone wrong!');
+            this.setState({
+              visibleModal: 1,
+              errorMessage: 'There was an error processing your request, please try again',
+            });
           }
         })
         .catch((error) => {
           console.log(error);
+          this.setState({
+            visibleModal: 1,
+            errorMessage: 'There was an error processing your request, please try again',
+          });
         });
   };
 
@@ -105,6 +120,17 @@ class RemoveUserChat extends Component {
             </Pressable>
           )}
         />
+        <Modal isVisible={this.state.visibleModal === 1}
+          style={globalStyles.bottomModal}>
+          <View style={globalStyles.modalContent}>
+            <Text>{this.state.errorMessage}</Text>
+            <Pressable onPress={() => this.setState({visibleModal: null})}>
+              <View style={globalStyles.modalButton}>
+                <Text>Close</Text>
+              </View>
+            </Pressable>
+          </View>
+        </Modal>
       </ScrollView>
     );
   }
