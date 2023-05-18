@@ -2,6 +2,8 @@ import {View, Pressable, Text, StyleSheet, TextInput} from 'react-native';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Modal from 'react-native-modal';
+import globalStyles from '../styles/globalStyles';
 
 class ChangeDetails extends Component {
   constructor(props) {
@@ -9,6 +11,8 @@ class ChangeDetails extends Component {
 
     this.state = {
       chatName: '',
+      visibleModal: null,
+      errorMessage: '',
     };
   }
 
@@ -29,7 +33,6 @@ class ChangeDetails extends Component {
     })
         .then((response) => response.json())
         .then(async (responseJson) => {
-          // eslint-disable-next-line prefer-const
           let dataToSend = {};
 
           if (this.state.chatName !== responseJson['name'] &&
@@ -53,19 +56,32 @@ class ChangeDetails extends Component {
                     this.props.navigation.goBack();
                   } else if (response.status === 400) {
                     console.log('400: Bad Request (bad data)');
-                  } else if (response.status === 403) {
-                    console.log('403: Forbidden (editing wrong chat?)');
-                  } else if (response.status === 404) {
-                    console.log('404: Not Found (chat does not exist)');
-                  } else if (response.status === 401 ||
-                             response.status === 500) {
-                    console.log('401 or 500: Something has gone wrong!');
+                    this.setState({
+                      visibleModal: 1,
+                      errorMessage: 'Name is invalid, please try again',
+                    });
+                  } else {
+                    this.setState({
+                      visibleModal: 1,
+                      errorMessage: 'There was a problem, please try again',
+                    });
                   }
                 })
                 .catch((error) => {
                   console.log(error);
+                  this.setState({
+                    visibleModal: 1,
+                    errorMessage: 'There was a problem, please try again',
+                  });
                 });
           }
+        })
+        .catch((error) => {
+          console.log(error);
+          this.setState({
+            visibleModal: 1,
+            errorMessage: 'There was a problem, please try again',
+          });
         });
   };
 
@@ -95,6 +111,17 @@ class ChangeDetails extends Component {
             <Text style={ChangeDetailsStyles.buttonText}>Submit</Text>
           </Pressable>
         </View>
+        <Modal isVisible={this.state.visibleModal === 1}
+          style={globalStyles.bottomModal}>
+          <View style={globalStyles.modalContent}>
+            <Text>{this.state.errorMessage}</Text>
+            <Pressable onPress={() => this.setState({visibleModal: null})}>
+              <View style={globalStyles.modalButton}>
+                <Text>Close</Text>
+              </View>
+            </Pressable>
+          </View>
+        </Modal>
       </View>
     );
   }
