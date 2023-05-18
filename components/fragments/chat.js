@@ -7,6 +7,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import User from '../elements/user';
 
+import Modal from 'react-native-modal';
+import globalStyles from '../styles/globalStyles';
+
 class Chats extends Component {
   constructor(props) {
     super(props);
@@ -41,6 +44,10 @@ class Chats extends Component {
         })
         .catch((error) => {
           console.log(error);
+          this.setState({
+            visibleModal: 1,
+            errorMessage: 'There was an error loading chats, try again',
+          });
         });
   };
 
@@ -85,6 +92,17 @@ class Chats extends Component {
       return (
         <View>
           <Text>Loading...</Text>
+          <Modal isVisible={this.state.visibleModal === 1}
+            style={globalStyles.bottomModal}>
+            <View style={globalStyles.modalContent}>
+              <Text>{this.state.errorMessage}</Text>
+              <Pressable onPress={() => this.setState({visibleModal: null})}>
+                <View style={globalStyles.modalButton}>
+                  <Text>Close</Text>
+                </View>
+              </Pressable>
+            </View>
+          </Modal>
         </View>
       );
     } else {

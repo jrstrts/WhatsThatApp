@@ -1,12 +1,14 @@
 /* eslint-disable max-len */
 
-import {ScrollView, FlatList, View, Text} from 'react-native';
+import {ScrollView, FlatList, View, Text, Pressable} from 'react-native';
 import React, {Component} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import PropTypes from 'prop-types';
+import Modal from 'react-native-modal';
 
 import Message from '../elements/message';
 import MessageInput from '../elements/messageInput';
+import globalStyles from '../styles/globalStyles';
 
 class MessageThread extends Component {
   constructor(props) {
@@ -20,6 +22,8 @@ class MessageThread extends Component {
       chatInfo: [],
       chatMessages: [],
       myUserID: null,
+      visibleModal: null,
+      errorMessage: '',
     };
   }
 
@@ -44,6 +48,10 @@ class MessageThread extends Component {
         })
         .catch((error) => {
           console.log(error);
+          this.setState({
+            visibleModal: 1,
+            errorMessage: 'There was an error retrieving messages, please try again',
+          });
         });
   };
 
@@ -66,6 +74,17 @@ class MessageThread extends Component {
       return (
         <View>
           <Text>Loading...</Text>
+          <Modal isVisible={this.state.visibleModal === 1}
+            style={globalStyles.bottomModal}>
+            <View style={globalStyles.modalContent}>
+              <Text>{this.state.errorMessage}</Text>
+              <Pressable onPress={() => this.setState({visibleModal: null})}>
+                <View style={globalStyles.modalButton}>
+                  <Text>Close</Text>
+                </View>
+              </Pressable>
+            </View>
+          </Modal>
         </View>
       );
     } else {
@@ -91,6 +110,17 @@ class MessageThread extends Component {
           <View>
             <MessageInput chatID={this.props.route.params.chatID} navigation={this.props.navigation}/>
           </View>
+          <Modal isVisible={this.state.visibleModal === 1}
+            style={globalStyles.bottomModal}>
+            <View style={globalStyles.modalContent}>
+              <Text>{this.state.errorMessage}</Text>
+              <Pressable onPress={() => this.setState({visibleModal: null})}>
+                <View style={globalStyles.modalButton}>
+                  <Text>Close</Text>
+                </View>
+              </Pressable>
+            </View>
+          </Modal>
         </View>
       );
     }
