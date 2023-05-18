@@ -3,6 +3,8 @@ import React, {Component} from 'react';
 import User from '../elements/user';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import PropTypes from 'prop-types';
+import Modal from 'react-native-modal';
+import globalStyles from '../styles/globalStyles';
 
 class Contacts extends Component {
   constructor(props) {
@@ -14,6 +16,8 @@ class Contacts extends Component {
       firstName: '',
       lastName: '',
       contactData: [],
+      visibleModal: null,
+      errorMessage: '',
     };
   }
 
@@ -36,6 +40,10 @@ class Contacts extends Component {
         })
         .catch((error) => {
           console.log(error);
+          this.setState({
+            visibleModal: 1,
+            errorMessage: 'Failed to load contacts, please try again',
+          });
         });
   };
 
@@ -53,6 +61,17 @@ class Contacts extends Component {
       return (
         <View>
           <Text>Loading...</Text>
+          <Modal isVisible={this.state.visibleModal === 1}
+            style={globalStyles.bottomModal}>
+            <View style={globalStyles.modalContent}>
+              <Text>{this.state.errorMessage}</Text>
+              <Pressable onPress={() => this.setState({visibleModal: null})}>
+                <View style={globalStyles.modalButton}>
+                  <Text>Close</Text>
+                </View>
+              </Pressable>
+            </View>
+          </Modal>
         </View>
       );
     } else {
