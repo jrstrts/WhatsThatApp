@@ -20,5 +20,6 @@ module.exports = {
     'require-jsdoc': 'off',
     'linebreak-style': ['error', 'windows'],
     'no-throw-literal': 'off',
+    'max-len': 'warn',
   },
 };
