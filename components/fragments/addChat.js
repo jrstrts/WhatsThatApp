@@ -2,6 +2,8 @@ import {View, Pressable, Text, StyleSheet, TextInput} from 'react-native';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Modal from 'react-native-modal';
+import globalStyles from '../styles/globalStyles';
 
 class AddChat extends Component {
   constructor(props) {
@@ -9,6 +11,8 @@ class AddChat extends Component {
 
     this.state = {
       chatName: '',
+      visibleModal: null,
+      errorMessage: '',
     };
   }
 
@@ -38,11 +42,23 @@ class AddChat extends Component {
               chatName: '',
             });
             this.props.navigation.goBack();
+          } else if (response.status === 400) {
+            this.setState({
+              visibleModal: 1,
+              errorMessage: 'Check the name of your chat and try again',
+            });
           } else {
-            // TODO: better error messages with toasts
-            console.log('Something has gone wrong!');
-            console.log(response.status);
+            this.setState({
+              visibleModal: 1,
+              errorMessage: 'There was a problem with your request, please try again',
+            });
           }
+        })
+        .catch(() => {
+          this.setState({
+            visibleModal: 1,
+            errorMessage: 'There was a problem with your request, please try again',
+          });
         });
   };
 
@@ -73,6 +89,17 @@ class AddChat extends Component {
             <Text style={AddChatStyles.buttonText}>Submit</Text>
           </Pressable>
         </View>
+        <Modal isVisible={this.state.visibleModal === 1}
+          style={globalStyles.bottomModal}>
+          <View style={globalStyles.modalContent}>
+            <Text>{this.state.errorMessage}</Text>
+            <Pressable onPress={() => this.setState({visibleModal: null})}>
+              <View style={globalStyles.modalButton}>
+                <Text>Close</Text>
+              </View>
+            </Pressable>
+          </View>
+        </Modal>
       </View>
     );
   }
